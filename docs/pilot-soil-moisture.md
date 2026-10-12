@@ -61,6 +61,8 @@ Show that Greecon Platform can reliably measure soil moisture at a real farm or 
 
 ## Platform work before the pilot (month 3)
 
-1. **Email alerts** for critical alerts, so the farmer does not have to watch the dashboard.
-2. **Albanian interface** for farm users.
-3. **Per-site access** for partner accounts, if more than one partner will use the platform.
+1. **Email alerts**: done. New alerts and "station offline" are emailed in English and Albanian. See the README, section *Email alerts*.
+2. **Albanian interface** for farm users: not done. The dashboard is English only for the pilot; the emails are bilingual, and the farmer's contact point is the email, not the dashboard.
+3. **Per-site access** for partner accounts: not done. It is not needed while the pilot has a single farm. Revisit it before a second partner joins.
+
+The step-by-step setup for the project manager is in [`pilot-setup-guide.pdf`](pilot-setup-guide.pdf).

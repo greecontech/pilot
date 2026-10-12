@@ -2,7 +2,7 @@
 
 This is the pilot station for Greecon Platform. Every 10 minutes it measures soil moisture (two sensors) and soil temperature. Optionally it also measures air temperature and humidity. It sends the readings to the platform over Wi-Fi, then goes back into deep sleep between measurements.
 
-> **Status:** the firmware has not been compiled or run on hardware yet. The build sandbox has no access to the ESP32 toolchain. The data it sends has been tested against the platform with `devices/emulator/send_test_readings.py`, which uses exactly the same metrics and JSON format. The first bench test (step 4 below) is where the firmware itself gets verified.
+> **Status:** the firmware **compiles** with `esp32` core 3.3.12 and the libraries OneWire 2.3.8, DallasTemperature 4.0.6 and Adafruit SHT31 Library 2.2.2 (81% of flash, 15% of RAM; checked on 12 October 2026 with `arduino-cli compile --fqbn esp32:esp32:esp32`). It has **not yet run on hardware**. The data it sends has been tested against the platform with `devices/emulator/send_test_readings.py`, which uses exactly the same metrics and JSON format. The first bench test (step 6 below) is where the firmware itself gets verified on a real board.
 
 ## Shopping list (one station)
 
