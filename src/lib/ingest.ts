@@ -1,5 +1,6 @@
 import type { PoolClient } from "pg";
 import { pool } from "./db";
+import { notifyPendingAlerts } from "./notify";
 import { evaluate, type Thresholds } from "./thresholds";
 
 export type Origin = "api" | "manual" | "import" | "simulated";
@@ -47,6 +48,8 @@ export async function recordReadings(readings: ReadingInput[], origin: Origin) {
       [[...newest.keys()]]
     );
     await client.query("commit");
+    // Email after the commit and without waiting: a slow mail provider must never delay the device's upload.
+    if (alertsOpened > 0) void notifyPendingAlerts().catch((e) => console.error("[notify]", e.message));
     return { inserted: readings.length, alertsOpened };
   } catch (error) {
     await client.query("rollback");

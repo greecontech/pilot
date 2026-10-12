@@ -1,6 +1,7 @@
 import { pool, query } from "./db";
 import { DEMO_SITES, demoValue } from "./demo-model";
 import { recordReadings } from "./ingest";
+import { startNotifier } from "./notify";
 
 const HOUR = 3_600_000;
 
@@ -67,6 +68,7 @@ export async function start() {
     console.warn("[bootstrap] DATABASE_URL not set; skipping seed and simulator.");
     return;
   }
+  startNotifier();
   try {
     if (process.env.SEED_DEMO === "true") await seedDemo();
     if (process.env.SIMULATOR === "true" && !timer) {

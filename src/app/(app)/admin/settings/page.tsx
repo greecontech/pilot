@@ -5,7 +5,8 @@ import { one, query } from "@/lib/db";
 import { fmtDate, fmtDateTime, fmtNumber } from "@/lib/format";
 import { projectStart } from "@/lib/project";
 import { requireUser, sessionSecretConfigured } from "@/lib/session";
-import { saveSettings } from "./actions";
+import { emailConfigured } from "@/lib/notify";
+import { saveAlertRecipients, saveSettings, sendTestEmailAction } from "./actions";
 
 export const metadata = { title: "Settings & audit" };
 const PAGE_SIZE = 50;
@@ -61,6 +62,20 @@ export default async function Settings({ searchParams }: { searchParams: Promise
           </table>
         </Panel>
       </div>
+
+      <Panel title="Alert emails" meta="Critical and warning alerts, and stations that stop sending, are emailed to these addresses (English / Albanian).">
+        <div className="stack">
+          <table>
+            <tbody>
+              <tr><td className="muted">Email service</td><td>{emailConfigured() ? `Resend · from ${process.env.ALERT_EMAIL_FROM}` : <span style={{ color: "var(--critical)" }}>not configured — set RESEND_API_KEY and ALERT_EMAIL_FROM on the server</span>}</td></tr>
+            </tbody>
+          </table>
+          <ActionForm action={saveAlertRecipients} submit="Save recipients" resetOnSuccess={false}>
+            <label>Recipients (separate with commas)<textarea name="alert_recipients" rows={2} defaultValue={settings.alert_recipients ?? process.env.ALERT_EMAIL_TO ?? ""} placeholder="farmer@example.com, pm@greecon.earth" /></label>
+          </ActionForm>
+          <ActionForm action={sendTestEmailAction} submit="Send test email" buttonClass="secondary" />
+        </div>
+      </Panel>
 
       <Panel title="Audit log" flush actions={
         <form method="get" className="row">
