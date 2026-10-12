@@ -32,7 +32,7 @@ function render(heading: string, rows: Row[], link: string | null, linkLabel: st
     `<table style="border-collapse:collapse;font-size:15px">` +
     rows.map(([k, v]) => `<tr><td style="padding:3px 16px 3px 0;color:#5b6b62">${escapeHtml(k)}</td><td style="padding:3px 0"><strong>${escapeHtml(v)}</strong></td></tr>`).join("") +
     `</table>` +
-    (link ? `<p style="margin:16px 0 0"><a href="${escapeHtml(link)}">${escapeHtml(linkLabel)}</a></p>` : "") +
+    (link ? `<p style="margin:16px 0 0"><a href="${escapeHtml(link)}" style="color:#386f54">${escapeHtml(linkLabel)}</a></p>` : "") +
     `<p style="margin:20px 0 0;font-size:12px;color:#5b6b62">Greecon Platform</p></div>`;
   return { text, html };
 }
