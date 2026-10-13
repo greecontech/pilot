@@ -3,122 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Soil moisture pilot: setup guide for the project manager</title>
-<style>
-@font-face { font-family: "IBM Plex Serif"; font-weight: 400; src: url("fonts/ibm-plex-serif-latin-400-normal.woff2") format("woff2"); }
-@font-face { font-family: "IBM Plex Serif"; font-weight: 400; font-style: italic; src: url("fonts/ibm-plex-serif-latin-400-italic.woff2") format("woff2"); }
-@font-face { font-family: "IBM Plex Serif"; font-weight: 500; src: url("fonts/ibm-plex-serif-latin-500-normal.woff2") format("woff2"); }
-@font-face { font-family: "IBM Plex Serif"; font-weight: 600; src: url("fonts/ibm-plex-serif-latin-600-normal.woff2") format("woff2"); }
-
-:root {
-  --bg: #f7f1e9; --surface: #efe8dd; --ink: #1a211d; --ink2: #2f3d35; --pale: #d8e2dc; --green: #448561;
-  --muted: #5d675f; --line: #d9d1c4; --warn: #8a6a2d; --warn-bg: #f6eddb; --crit: #8f3d36; --crit-bg: #f5e4e1; --ok: #386f54;
-}
-@page { size: A4; margin: 17mm 17mm 19mm 17mm;
-  @bottom-left { content: "Greecon Platform · Soil moisture pilot · Setup guide v1.0"; font: 400 7.5pt "IBM Plex Serif", serif; color: #5d675f; }
-  @bottom-right { content: counter(page); font: 400 8pt "IBM Plex Serif", serif; color: #5d675f; } }
-@page :first { margin: 0; @bottom-left { content: none; } @bottom-right { content: none; } }
-
-* { box-sizing: border-box; }
-html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-body { margin: 0; font-family: "IBM Plex Serif", Georgia, serif; font-size: 9.4pt; line-height: 1.45; color: var(--ink); }
-h1, h2, h3, h4 { font-weight: 500; margin: 0; letter-spacing: -0.005em; break-after: avoid; }
-h1 { font-size: 20pt; line-height: 1.15; }
-h2 { font-size: 13pt; margin: 16pt 0 6pt; }
-h3 { font-size: 10.5pt; margin: 11pt 0 4pt; }
-p { margin: 0 0 6pt; }
-ul, ol { margin: 0 0 6pt; padding-left: 15pt; }
-li { margin-bottom: 2pt; }
-a { color: var(--ok); text-decoration: none; }
-code, .mono { font-family: "DejaVu Sans Mono", Menlo, monospace; font-size: 8pt; background: #efe8dd; padding: 0.5pt 3pt; border-radius: 2pt; overflow-wrap: anywhere; }
-pre { font-family: "DejaVu Sans Mono", Menlo, monospace; font-size: 7.6pt; line-height: 1.4; background: var(--surface); border: 1px solid var(--line); border-radius: 4pt; padding: 7pt 9pt; margin: 4pt 0 8pt; white-space: pre-wrap; overflow-wrap: anywhere; break-inside: avoid; }
-.muted { color: var(--muted); }
-.small { font-size: 8pt; }
-.kicker { font-size: 7.6pt; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); font-weight: 600; }
-.pb { break-before: page; }
-.avoid { break-inside: avoid; }
-
-/* cover */
-.cover { height: 297mm; width: 210mm; background: var(--bg); padding: 26mm 22mm 20mm; display: flex; flex-direction: column; position: relative; break-after: page; }
-.cover .brand { display: flex; align-items: center; gap: 10pt; }
-.cover .brand img { height: 30pt; }
-.cover .brand span { font-size: 13pt; letter-spacing: 0.16em; font-weight: 500; }
-.cover .brand small { display: block; font-size: 7.5pt; letter-spacing: 0.2em; color: var(--muted); font-weight: 400; }
-.cover h1 { font-size: 36pt; line-height: 1.08; margin: 46mm 0 8pt; }
-.cover .sub { font-size: 15pt; color: var(--ink2); margin-bottom: 16pt; }
-.cover .lede { font-size: 10.6pt; max-width: 128mm; color: var(--ink2); line-height: 1.55; }
-.cover .rule { height: 3pt; width: 34mm; background: var(--green); margin: 14pt 0; }
-.cover table { margin-top: auto; border-collapse: collapse; font-size: 8.8pt; width: 100%; }
-.cover td { padding: 5pt 0; border-top: 1px solid var(--line); vertical-align: top; }
-.cover td:first-child { width: 36mm; color: var(--muted); }
-.cover .foot { font-size: 7.6pt; color: var(--muted); margin-top: 10pt; }
-
-/* contents */
-.toc { list-style: none; padding: 0; margin: 8pt 0 0; }
-.toc li { display: flex; align-items: baseline; gap: 6pt; padding: 4pt 0; border-bottom: 1px dotted var(--line); margin: 0; }
-.toc .n { width: 16pt; color: var(--green); font-weight: 600; }
-.toc .t { flex: 0 1 auto; font-weight: 500; }
-.toc .d { color: var(--muted); font-size: 8.2pt; flex: 1; }
-.toc .p { color: var(--muted); }
-
-/* blocks */
-.callout { background: var(--bg); border-left: 3pt solid var(--green); padding: 7pt 10pt; margin: 6pt 0 9pt; border-radius: 0 4pt 4pt 0; break-inside: avoid; }
-.callout.warn { background: var(--warn-bg); border-color: var(--warn); }
-.callout.stop { background: var(--crit-bg); border-color: var(--crit); }
-.callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
-.callout b.t { display: block; font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2pt; color: var(--green); }
-.callout.warn b.t { color: var(--warn); } .callout.stop b.t { color: var(--crit); }
-.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; }
-.cols > div { break-inside: avoid; }
-figure { margin: 6pt 0 9pt; break-inside: avoid; }
-figure img { width: 100%; border: 1px solid var(--line); border-radius: 4pt; display: block; }
-figcaption { font-size: 7.8pt; color: var(--muted); margin-top: 3pt; }
-
-table { border-collapse: collapse; width: 100%; margin: 4pt 0 9pt; font-size: 8.6pt; }
-th { text-align: left; font-weight: 600; font-size: 7.6pt; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink2); background: var(--surface); padding: 4pt 6pt; border-bottom: 1.2pt solid var(--ink2); }
-td { padding: 4.5pt 6pt; border-bottom: 1px solid var(--line); vertical-align: top; }
-thead { display: table-header-group; }
-tr { break-inside: avoid; }
-td.r, th.r { text-align: right; white-space: nowrap; }
-td.nw { white-space: nowrap; }
-tr.sub td { background: var(--bg); font-weight: 600; }
-table.steps td:first-child { width: 22pt; font-weight: 600; color: var(--green); white-space: nowrap; }
-table.steps td:nth-child(3) { width: 48pt; font-size: 8pt; color: var(--ink2); }
-table.steps td:nth-child(4) { width: 44pt; font-size: 8pt; color: var(--ink2); }
-table.steps td:nth-child(5) { width: 112pt; font-size: 8.2pt; background: #f5f8f6; }
-table.steps th:first-child { width: 22pt; }
-.cb { display: inline-block; width: 7.5pt; height: 7.5pt; border: 1.1pt solid var(--ink2); border-radius: 1.5pt; vertical-align: -1pt; margin-right: 4pt; }
-.tag { display: inline-block; font-size: 7pt; padding: 0.5pt 5pt; border-radius: 8pt; background: var(--pale); color: var(--ink2); letter-spacing: 0.03em; white-space: nowrap; }
-.tag.opt { background: var(--warn-bg); color: var(--warn); }
-.tag.req { background: var(--green); color: #fff; }
-
-/* phase header */
-.phase { display: flex; align-items: stretch; margin: 15pt 0 5pt; break-after: avoid; break-inside: avoid; }
-.phase .n { background: var(--green); color: #fff; font-size: 17pt; font-weight: 500; width: 33pt; display: flex; align-items: center; justify-content: center; border-radius: 4pt 0 0 4pt; }
-.phase .b { background: var(--bg); flex: 1; padding: 6pt 10pt; border-radius: 0 4pt 4pt 0; }
-.phase h3 { margin: 0; font-size: 11.5pt; }
-.phase .when { font-size: 8.2pt; color: var(--muted); }
-.phase .goal { font-size: 8.6pt; margin-top: 2pt; }
-
-/* gantt */
-table.gantt { table-layout: fixed; font-size: 7.8pt; }
-table.gantt th { text-align: center; padding: 3pt 1pt; font-size: 6.8pt; letter-spacing: 0; text-transform: none; }
-table.gantt th:first-child, table.gantt td:first-child { width: 112pt; text-align: left; padding-left: 4pt; }
-table.gantt td { padding: 0; height: 17pt; border-bottom: 1px solid #ece5d8; border-left: 1px solid #f0eadf; }
-table.gantt td.b { background: var(--green); }
-table.gantt td.l { background: repeating-linear-gradient(45deg, #cfd9d2, #cfd9d2 2.5pt, #e6ece8 2.5pt, #e6ece8 5pt); }
-table.gantt td.k { background: var(--warn); }
-table.gantt td.f { background: var(--crit); }
-table.gantt td:first-child { border-left: none; padding-right: 4pt; font-size: 8pt; }
-table.log td { height: 25pt; }
-.legend { font-size: 7.6pt; color: var(--muted); display: flex; gap: 12pt; margin-top: -4pt; margin-bottom: 8pt; }
-.legend i { display: inline-block; width: 14pt; height: 6pt; vertical-align: 0; margin-right: 3pt; }
-
-.farmer { border: 1.5pt solid var(--green); border-radius: 8pt; padding: 12pt 16pt; break-inside: avoid; }
-.farmer h2 { margin-top: 0; }
-.farmer ol { padding-left: 16pt; } .farmer li { margin-bottom: 7pt; font-size: 10pt; }
-.farmer .al { font-weight: 600; } .farmer .en { color: var(--muted); font-size: 8.6pt; display: block; font-weight: 400; }
-.sig { border-bottom: 1px solid var(--ink2); display: inline-block; width: 90pt; height: 10pt; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -134,7 +19,7 @@ table.log td { height: 25pt; }
     <tr><td>Application</td><td>SA2026008101 · Greecon shpk · project ends <b>18 December 2026</b></td></tr>
     <tr><td>Prepared for</td><td>The project manager (budget line 1.1)</td></tr>
     <tr><td>Technical lead</td><td>Eridon Manuka, CEO and systems engineer</td></tr>
-    <tr><td>Version</td><td>1.0 · 12 October 2026 · code in <span class="mono">greecontech/pilot</span></td></tr>
+    <tr><td>Version</td><td>1.1 · 13 October 2026 · code in <span class="mono">greecontech/pilot</span></td></tr>
   </table>
   <div class="foot">Prices, plans and delivery times in this guide are estimates collected on 12 October 2026. They are marked “≈”. Confirm them before you pay.</div>
 </section>
@@ -151,6 +36,7 @@ table.log td { height: 25pt; }
   <li><span class="n">D</span><span class="t">Evaluation and reporting</span><span class="d">Success criteria, farmer interview, evidence</span><span class="p" data-find="Part D · Evaluation and reporting"></span></li>
   <li><span class="n">E</span><span class="t">Appendices</span><span class="d">Accounts, variables, wiring, farmer card, commands, risks, sources</span><span class="p" data-find="Appendix 1 · Accounts"></span></li>
 </ul>
+<p class="small muted" style="margin-top:6pt"><b>Companion document:</b> <i>Station build tutorial</i>, a hands-on guide for the person who builds and installs the station, from an empty desk to a working unit. This guide tells you <i>what</i> to do and <i>when</i>; the tutorial shows <i>how</i>.</p>
 
 <h2 id="mission">1 · The mission</h2>
 <p>Startup Albania funds Greecon to prove the platform in real conditions. The platform can already monitor energy, water and agriculture sites. For the pilot we deliberately test <b>only one function</b>:</p>
@@ -264,20 +150,22 @@ table.log td { height: 25pt; }
 
 <!-- ═════════════ PART A ═════════════ -->
 <h2 class="pb" id="partA">Part A · Products to buy</h2>
-<p>This is the list for <b>two stations and spares</b>: one station at the farm, one spare or second plot. Prices are ≈ estimates in euros before shipping.</p>
+<p>This is the list for <b>two stations and spares</b>: one station at the farm, one spare or second plot. Prices are ≈ estimates in euros before shipping; those from shop listings were read on 12–13 October.</p>
 
 <h3>A.1 Hardware</h3>
-<table><thead><tr><th>Item</th><th class="r">Qty</th><th class="r">≈ € each</th><th class="r">≈ € total</th><th></th></tr></thead><tbody>
-  <tr><td><b>ESP32 DevKitC, ESP32-WROOM-32</b><br><span class="small muted">The classic ESP32. Do not swap for S2, S3 or C3 boards: the firmware uses pins that differ.</span></td><td class="r">3</td><td class="r">6–10</td><td class="r">18–30</td><td><span class="tag req">required</span></td></tr>
-  <tr><td><b>DFRobot SEN0193</b> capacitive soil moisture sensor<br><span class="small muted">Chosen over the €2 “v1.2” boards, which often ship a faulty regulator chip and misbehave at 3.3 V.</span></td><td class="r">6</td><td class="r">4–10</td><td class="r">24–60</td><td><span class="tag req">required</span></td></tr>
-  <tr><td><b>DS18B20 waterproof temperature probe</b>, with a 4.7 kΩ resistor pack</td><td class="r">3</td><td class="r">3</td><td class="r">11</td><td><span class="tag req">required</span></td></tr>
-  <tr><td><b>IP65 junction box</b> ≈150×110×70 mm with 3–4 cable glands</td><td class="r">2</td><td class="r">10</td><td class="r">20</td><td><span class="tag req">required</span></td></tr>
-  <tr><td>USB data cable for flashing (not a charge-only cable) and a <b>5 V USB power adapter</b></td><td class="r">2+1</td><td class="r">3–5</td><td class="r">13</td><td><span class="tag req">required</span></td></tr>
-  <tr><td>Perfboard, jumper wires, heat-shrink tubing, silicone sealant, cable ties</td><td class="r">1 lot</td><td class="r">10</td><td class="r">10</td><td><span class="tag req">required</span></td></tr>
-  <tr><td><b>Solar kit</b>: 6 V 3–6 W panel, 18650 cell and holder, TP4056 or CN3065 charger board<br><span class="small muted">Instead of the USB adapter where there is no mains. A 3 W panel is the minimum: boards draw a few mA even asleep.</span></td><td class="r">2</td><td class="r">20–30</td><td class="r">40–60</td><td><span class="tag opt">if no mains</span></td></tr>
-  <tr><td><b>4G router with a data SIM</b><br><span class="small muted">Teltonika RUT241 ≈ €148 net, ≈ €179 with VAT (Bechtle). A budget pocket 4G router such as the TP-Link M7200 costs less (≈ €40–80) but is less rugged outdoors.</span></td><td class="r">1</td><td class="r">40–180</td><td class="r">40–180</td><td><span class="tag opt">if no Wi-Fi</span></td></tr>
-  <tr><td>SHT31 air temperature and humidity breakout (greenhouse)</td><td class="r">2</td><td class="r">5</td><td class="r">10</td><td><span class="tag opt">optional</span></td></tr>
-</tbody></table>
+<p class="small muted">“Cart” says where to buy it: <b>1</b> Tirana Electronics (local), <b>2</b> DFRobot (abroad), <b>3</b> other local shops. Details in A.6.</p>
+<table>
+  <tr><th>Item</th><th class="r">Qty</th><th class="r">≈ € each</th><th class="r">≈ € total</th><th>Cart</th><th></th></tr>
+  <tr><td><b>ESP32 DevKitC, ESP32-WROOM-32</b><br><span class="small muted">The classic ESP32 on a ready-made board. Do not swap for S2, S3 or C3 boards: the firmware uses pins that differ. Listed locally at 1,200 lek.</span></td><td class="r">3</td><td class="r">8–12</td><td class="r">24–36</td><td><span class="tag">1</span></td><td><span class="tag req">required</span></td></tr>
+  <tr><td><b>DFRobot SEN0193</b> capacitive soil moisture sensor<br><span class="small muted">US$5.90 each, US$5.70 from 5 pieces. Chosen over cheap boards: the two-prong type sold locally corrodes in weeks, and the €2 “v1.2” clones often misbehave at 3.3 V.</span></td><td class="r">6</td><td class="r">5–6</td><td class="r">30–36</td><td><span class="tag">2</span></td><td><span class="tag req">required</span></td></tr>
+  <tr><td><b>Waterproof DS18B20 temperature probe</b>, plus a 4.7 kΩ resistor<br><span class="small muted">DFRobot DFR0198 US$6.90, or kit KIT0021 US$7.50 with an adapter module and cable.</span></td><td class="r">3</td><td class="r">6–7</td><td class="r">20–23</td><td><span class="tag">2</span></td><td><span class="tag req">required</span></td></tr>
+  <tr><td><b>IP65 junction box</b> ≈150×110×70 mm with 3–4 cable glands</td><td class="r">2</td><td class="r">10</td><td class="r">20</td><td><span class="tag">3</span></td><td><span class="tag req">required</span></td></tr>
+  <tr><td>USB data cable for flashing (not a charge-only cable) and a <b>5 V USB power adapter</b></td><td class="r">2+1</td><td class="r">3–5</td><td class="r">13</td><td><span class="tag">3</span></td><td><span class="tag req">required</span></td></tr>
+  <tr><td>Heat-shrink tubing, jumper wires, solder, perfboard, silicone sealant, cable ties</td><td class="r">1 lot</td><td class="r">10–15</td><td class="r">10–15</td><td><span class="tag">1, 3</span></td><td><span class="tag req">required</span></td></tr>
+  <tr><td><b>Solar kit</b>: 6 V 3–6 W panel, 18650 cell and holder, protected TP4056 charger, and a 5 V boost converter<br><span class="small muted">Instead of the USB adapter where there is no mains. A charger board alone cannot power the ESP32: Eridon designs and bench-tests the 5 V stage first (Build tutorial, section 9).</span></td><td class="r">2</td><td class="r">20–30</td><td class="r">40–60</td><td><span class="tag">3</span></td><td><span class="tag opt">if no mains</span></td></tr>
+  <tr><td><b>4G router with a data SIM</b><br><span class="small muted">Teltonika RUT241 ≈ €148 net, ≈ €179 with VAT (Bechtle). A budget pocket 4G router such as the TP-Link M7200 costs less (≈ €40–80) but is less rugged outdoors.</span></td><td class="r">1</td><td class="r">40–180</td><td class="r">40–180</td><td><span class="tag">3</span></td><td><span class="tag opt">if no Wi-Fi</span></td></tr>
+  <tr><td>SHT31 air temperature and humidity breakout (greenhouse)</td><td class="r">2</td><td class="r">5</td><td class="r">10</td><td><span class="tag">2</span></td><td><span class="tag opt">optional</span></td></tr>
+</table>
 <div class="callout"><b class="t">How many sensors, and why</b><p class="small" style="margin:0">Each station has <b>two</b> moisture sensors: one at 10–20 cm, one at 20–40 cm. The shallow one reacts to irrigation first; the deeper one shows the reserve in the root zone. Six are listed because two are spares: cheap soil sensors fail more often than anything else on the station.</p></div>
 
 <h3>A.2 Tools</h3>
@@ -288,26 +176,75 @@ table.log td { height: 25pt; }
   <tr><td><b>Railway</b>, Hobby plan</td><td>Hosts the platform and its PostgreSQL database</td><td>US$5 a month with US$5 of usage included; usage beyond that is billed</td><td>Budget US$5–15 a month and check <b>Usage</b> weekly. Confirm at railway.com/pricing.</td></tr>
   <tr><td><b>Resend</b>, free plan</td><td>Sends the alert emails</td><td>€0: 3,000 emails a month, 100 a day, 1 domain</td><td>We expect a few emails a week. Railway blocks SMTP on Hobby, so Resend’s web API is used.</td></tr>
   <tr><td><b>Domain</b> greecon.earth</td><td>Address <span class="mono">platform.greecon.earth</span> and the email sender</td><td>€0 (already owned)</td><td>Someone with access to its DNS settings must be available.</td></tr>
-  <tr><td><b>Mobile data SIM</b></td><td>Only with a 4G router</td><td>Ask the operator</td><td>The station sends under 1 MB a day (≈ 30 MB a month): the smallest plan is enough. Tourist SIMs expire after 2–3 weeks; get a company SIM with a monthly plan from Vodafone Albania or One Albania.</td></tr>
+  <tr><td><b>Mobile data SIM</b></td><td>Only with a 4G router</td><td>Ask the operator</td><td>The station sends under 1 MB a day (≈ 30 MB a month): the smallest plan is enough. Tourist SIMs expire after 2–3 weeks; get a company SIM with a monthly plan from Vodafone Albania or One Albania. Consumer prepaid plans quoted in travel blogs are ≈ 1,500–2,500 lek; business and IoT plans could not be found, so ask the operators’ business desks.</td></tr>
   <tr><td><b>Password manager</b></td><td>Keeps keys and passwords</td><td>≈ €0–5 a user</td><td>Bitwarden or 1Password. Turn on two-factor sign-in for Railway, GitHub and Resend.</td></tr>
 </tbody></table>
 
 <h3>A.4 Budget scenarios</h3>
 <table><thead><tr><th>Scenario</th><th class="r">Parts, ≈ €</th><th class="r">+30% shipping, courier and import VAT</th><th class="r">Plus, not included</th></tr></thead><tbody>
-  <tr><td><b>A</b> · Wi-Fi at the plot and mains power</td><td class="r">96–144</td><td class="r"><b>125–187</b></td><td class="r">≈ US$15–45 hosting</td></tr>
-  <tr><td><b>B</b> · Wi-Fi at the plot, solar power</td><td class="r">126–194</td><td class="r"><b>164–252</b></td><td class="r">≈ US$15–45 hosting</td></tr>
-  <tr><td><b>C</b> · Solar power and a 4G router</td><td class="r">166–374</td><td class="r"><b>216–486</b></td><td class="r">≈ US$15–45 hosting + SIM plan</td></tr>
+  <tr><td><b>A</b> · Wi-Fi at the plot and mains power</td><td class="r">117–143</td><td class="r"><b>152–186</b></td><td class="r">≈ US$15–45 hosting</td></tr>
+  <tr><td><b>B</b> · Wi-Fi at the plot, solar power</td><td class="r">147–193</td><td class="r"><b>191–251</b></td><td class="r">≈ US$15–45 hosting</td></tr>
+  <tr><td><b>C</b> · Solar power and a 4G router</td><td class="r">187–373</td><td class="r"><b>243–485</b></td><td class="r">≈ US$15–45 hosting + SIM plan</td></tr>
 </tbody></table>
-<p class="small muted">Optional SHT31 sensors (≈ €10) and tools are not included. Hosting is three months of Railway.</p>
+<p class="small muted">Optional SHT31 sensors (≈ €10) and tools are not included. Hosting is three months of Railway. The +30% is a cautious allowance applied to everything; parts bought in Tirana (Cart 1) carry no import costs.</p>
 <div class="callout warn"><b class="t">Grant eligibility: confirm before you rely on it</b><p class="small" style="margin:0">The application budget has no separate hardware line. The closest is <b>4.1 Technology development</b> (“development and optimisation of the platform, AI functions and technical performance”). Ask Startup Albania in writing whether pilot hardware, hosting and the SIM can be charged there. Keep every invoice in the name of <b>Greecon shpk</b> and file proof of payment with the grant documents.</p></div>
 
-<h3>A.5 Buying notes</h3>
+<h3>A.5 Buying rules</h3>
 <ul>
-  <li><b>Express shipping for the critical parts.</b> Boards and sensors from a distributor such as DigiKey, Mouser or Farnell/element14 typically arrive in days; marketplace shipping from Asia often takes weeks. Slow shipping would cost the whole pilot. Ask for a delivery quote to Tirana before you pay.</li>
-  <li><b>Local shops.</b> Check whether a shop in Tirana stocks the ESP32 DevKitC and DS18B20 probes: local stock removes the shipping risk. We could not verify any Albanian retailer for this guide.</li>
   <li><b>Do not substitute</b> the board or the soil sensor without asking Eridon. The firmware reads the sensors on pins 34 and 35 and is calibrated for the SEN0193 type.</li>
+  <li><b>Slow shipping would cost the whole pilot.</b> Marketplace shipping from Asia to Albania often takes 2–5 weeks. Use express shipping for the sensors, and buy in Tirana whatever Tirana has.</li>
   <li><b>Count and test on arrival.</b> Report a dead-on-arrival part within the supplier’s return window.</li>
+  <li><b>Invoices in the name of Greecon shpk</b> for everything, local or foreign (see the grant note above).</li>
 </ul>
+
+<h3>A.6 Where to buy: three carts</h3>
+<p>No single shop sells everything. The parts split naturally into what Tirana has, what must come from abroad, and what you must find locally. Shop pages were read on 13 October; listings can be out of date, so <b>confirm stock and price by phone or WhatsApp before you travel or pay</b>.</p>
+
+<h3 style="margin-top:8pt">Cart 1 · Tirana Electronics (tiranaelectronics.al) · buy this week</h3>
+<div class="callout"><p class="small" style="margin:0"><b>Address</b> Rruga Myslym Shyri, Tirana · <b>Phone and WhatsApp</b> +355 68 263 5962 · <b>Email</b> info@tiranaelectronics.al<br><b>Delivery</b> all of Albania. Tirana within 12 hours of order processing, 200 lek up to 2 kg. Other cities 2–3 working days, 300 lek up to 2 kg, +50 lek per extra kg. The shop says it takes no responsibility once the parcel leaves its warehouse: inspect on receipt.</p></div>
+<table>
+  <tr><th>Item as listed</th><th class="r">Qty</th><th class="r">Listed, lek</th><th>Note</th></tr>
+  <tr><td><b>ESP32 ESP32D ESP32-WROOM-32D</b> “Development Board”</td><td class="r">3</td><td class="r">1,200</td><td>The listing has no photo and does not mention a USB socket. <b>Ask for a photo</b> and confirm it is a ready-made board with a USB port and pin headers, like an ESP32 DevKit. Alternative: <i>ESP32 Basic Starter Kit</i>, 3,500 lek (board, breadboard, wires, USB cable).</td></tr>
+  <tr><td>Heat-shrink tubing</td><td class="r">1</td><td class="r">600</td><td>To seal the sensor electronics.</td></tr>
+  <tr><td>DuPont jumper cables, 40-pin (M/F, M/M, F/F)</td><td class="r">3 sets</td><td class="r">12 each</td><td>For the bench build.</td></tr>
+  <tr><td>Solder wire SOLDEX 0.75 mm, 200 g</td><td class="r">1</td><td class="r">1,800 / 2,160</td><td>The page shows two prices without saying which applies.</td></tr>
+  <tr><td>Pro’sKit SI-131G soldering iron</td><td class="r">1</td><td class="r">2,500</td><td>Only if the team has none.</td></tr>
+  <tr><td>Digital meter</td><td class="r">1</td><td class="r">–</td><td>Ask for a simple multimeter. The only meter listed is a clamp meter (Pro’sKit MT-3202, 3,500 lek).</td></tr>
+</table>
+<div class="callout stop"><b class="t">Do not buy the shop’s “Soil Moisture Sensor Module”, 300 lek</b><p class="small" style="margin:0">It is a 60×30 mm probe on an LM393 comparator board, the classic two-prong type. The exposed metal corrodes in wet soil within weeks, and the readings drift long before it fails. The pilot needs the capacitive sensor in Cart 2.</p></div>
+<p class="small muted">Not found on the pages I could read: capacitive soil sensors, DS18B20 probes, SHT31, junction boxes, cable glands, resistors, perfboard, solar parts, 4G routers. I read the three pages of the electronic-components category and the first page of its sensor and module categories.</p>
+
+<h3>Cart 2 · DFRobot (dfrobot.com) · order by Wed 14 Oct</h3>
+<table>
+  <tr><th>Item</th><th>SKU</th><th class="r">Qty</th><th class="r">Price</th></tr>
+  <tr><td><b>Gravity: Analog Capacitive Corrosion Resistant Soil Moisture Sensor</b><br><span class="small muted">3.3–5.5 V supply, 1.2–2.5 V output, PH2.0-3P connector with cable.</span></td><td class="mono">SEN0193</td><td class="r">6</td><td class="r">US$5.90 each; $5.80 from 3, $5.70 from 5, $5.50 from 10</td></tr>
+  <tr><td><b>Waterproof DS18B20 temperature sensor</b>, stainless steel probe 6×35 mm, 90 cm cable<br><span class="small muted">Sensor only, or the kit with an adapter module and cable. The page does not state the resistor value in the kit: keep a 4.7 kΩ resistor to follow the wiring table.</span></td><td class="mono">DFR0198 or KIT0021</td><td class="r">3</td><td class="r">US$6.90 sensor only; US$7.50 kit</td></tr>
+</table>
+<p>Subtotal about <b>US$55–60</b> before shipping. DFRobot ships by DHL and FedEx and quotes 3–7 business days to Eastern Europe, free shipping only above US$150. <b>Its shipping page does not name Albania</b>, and terms are FOB Shanghai: you pay all import duty, taxes and courier fees. Email <span class="mono">store@dfrobot.com</span> before paying:</p>
+<pre>Subject: Delivery to Tirana, Albania, company order
+Hello, we are Greecon shpk, a company in Tirana, Albania. Do you ship to Albania
+by DHL or FedEx? Please quote shipping cost and delivery time for 6 x SEN0193
+and 3 x DFR0198, and send a pro-forma invoice in the company's name.</pre>
+<p class="small"><b>Backups if DFRobot cannot ship:</b> DigiKey, Mouser and Farnell/element14 stock the same DFRobot parts. For example, Mouser’s Austrian site lists the DFR0198 at about €5.93, and the ESP32-DevKitC-32E is listed at about £7.67 (DigiKey UK) and €8.77 (Mouser France). I could not load their shipping pages: enter the Tirana address in the cart to see whether and how they deliver. AliExpress delivers to Albania but economy shipping takes about 15–35 days: use it for spares only.</p>
+
+<h3>Cart 3 · Other local shops · enquire this week (not verified)</h3>
+<table>
+  <tr><th>Item</th><th>Where to ask</th></tr>
+  <tr><td>IP65 junction box ≈150×110×70 mm and PG7/PG9 cable glands</td><td>An electrical wholesaler (“materiale elektrike”). Bring the dimensions.</td></tr>
+  <tr><td>4.7 kΩ resistors, perfboard</td><td>Ask Tirana Electronics: neither appeared on the pages I read. Or any electronics components shop.</td></tr>
+  <tr><td>5 V USB adapters and a data cable; silicone sealant; cable ties</td><td>A phone-accessory shop and a hardware shop.</td></tr>
+  <tr><td>4G router and SIM, only if the plot has no Wi-Fi</td><td>The business desks of Vodafone Albania and One Albania. Or order the Teltonika RUT241 from abroad (≈ €148 net).</td></tr>
+  <tr><td>Solar panel 6 V 3–6 W, 18650 cell, protected TP4056 board, and a boost converter that accepts at least 3 V in and gives 5 V out</td><td>A local solar or electronics shop. Only after Eridon has approved the solar design: not every boost module starts from one lithium cell.</td></tr>
+</table>
+
+<div class="callout warn"><b class="t">Importing as a company is not the same as shopping as a private person</b>
+<p class="small">The official Albanian customs site (dogana.gov.al) exempts internet purchases delivered by postal consignment up to <b>€22</b> (gifts between individuals up to €45), but only for <b>non-commercial</b> consignments. It does not say how company imports are treated. Plan for a <b>commercial import</b>: a customs declaration, 20% VAT and possibly duty, handled by the courier’s customs broker.</p>
+<ul class="small" style="margin-bottom:0">
+  <li>Put the order in the company’s name and give the courier the company’s NIPT.</li>
+  <li>Keep the invoice, the customs declaration and the courier’s receipt together for the grant file.</li>
+  <li>Ask the accountant how VAT is treated before you order.</li>
+  <li>Send everything from abroad in <b>one parcel</b>, so you clear customs once.</li>
+</ul></div>
 
 <!-- ═════════════ PART B ═════════════ -->
 <h2 class="pb" id="partB">Part B · Step-by-step plan</h2>
@@ -324,8 +261,8 @@ table.log td { height: 25pt; }
 <div class="phase"><div class="n">1</div><div class="b"><h3>Survey the plot and order</h3><div class="when">Tue 13 – Wed 14 Oct · hardware in hand by Fri 23 Oct (latest Wed 28 Oct)</div><div class="goal">The right parts for this plot are on their way, and delivery is tracked.</div></div></div>
 <table class="steps"><thead><tr><th>#</th><th>What to do</th><th>Who</th><th>Time</th><th>Done when</th></tr></thead><tbody>
   <tr><td>1.1</td><td><span class="cb"></span><b>Survey the exact spot</b> (a phone call with the farmer can replace a visit). Wi-Fi: is there signal at the station’s spot, stronger than −75 dBm on a Wi-Fi analyzer app? Power: a mains socket within reach, or a sunny, unshaded place for a panel? Where does the irrigation spray reach? Is the spot safe from animals and machinery?</td><td>PM</td><td>2 h</td><td>Answers written down. Scenario A, B or C chosen (A.4).</td></tr>
-  <tr><td>1.2</td><td><span class="cb"></span><b>Order the parts</b> marked “required” in A.1, plus the solar kit or 4G router if the survey needs them. Use one or two suppliers, with express shipping.</td><td>PM</td><td>2 h</td><td>Order confirmations saved. Eridon has approved the list.</td></tr>
-  <tr><td>1.3</td><td><span class="cb"></span>If a 4G router is needed, <b>buy the SIM and plan</b> from Vodafone Albania or One Albania in the company’s name.</td><td>PM</td><td>1 h</td><td>SIM active; the plan cost is noted.</td></tr>
+  <tr><td>1.2</td><td><span class="cb"></span><b>Place the three carts in A.6.</b> Cart 1: call or WhatsApp Tirana Electronics and ask for a photo of the ESP32 board. Cart 2: email DFRobot first (the template is in A.6), then order the sensors in one parcel with express shipping. Cart 3: start the enquiries.</td><td>PM</td><td>3 h</td><td>Cart 1 collected or ordered. Cart 2 ordered. Cart 3 shops identified. Eridon has approved the list.</td></tr>
+  <tr><td>1.3</td><td><span class="cb"></span>If a 4G router is needed, <b>ask the business desks</b> of Vodafone Albania and One Albania for a router and a data plan in the company’s name, and buy the one that covers the plot best.</td><td>PM</td><td>2 h</td><td>SIM active; the plan cost is noted.</td></tr>
   <tr><td>1.4</td><td><span class="cb"></span>Put every order in a tracker with its expected date. Chase on <b>Mon 19 Oct</b> and <b>Mon 26 Oct</b>. Count everything on arrival.</td><td>PM</td><td>15 min a week</td><td>All parts received, counted and working. (Gate A: Wed 28 Oct.)</td></tr>
 </tbody></table>
 
@@ -355,7 +292,7 @@ table.log td { height: 25pt; }
 <div class="phase"><div class="n">3</div><div class="b"><h3>Build the stations and bench test</h3><div class="when">When the parts arrive (target 23 Oct, latest 28 Oct) – Mon 2 Nov</div><div class="goal">Each station works on a table for 72 hours before it goes near a field. This is the first time the firmware runs on a real board.</div></div></div>
 <table class="steps"><thead><tr><th>#</th><th>What to do</th><th>Who</th><th>Time</th><th>Done when</th></tr></thead><tbody>
   <tr><td>3.1</td><td><span class="cb"></span>Unpack and check against the order. Plug each board into a computer: a serial port must appear. Touch-test each sensor and probe.</td><td>TL, PM</td><td>1 h</td><td>Parts list ticked, spares set aside.</td></tr>
-  <tr><td>3.2</td><td><span class="cb"></span>Install the Arduino IDE 2. <i>Boards Manager:</i> <span class="mono">esp32 by Espressif Systems</span> <b>3.3.12</b>. <i>Library Manager:</i> OneWire <b>2.3.8</b>, DallasTemperature <b>4.0.6</b>, Adafruit SHT31 Library <b>2.2.2</b> (it adds Adafruit BusIO). These exact versions compiled the firmware on 12 Oct.</td><td>TL</td><td>1 h</td><td>The sketch compiles.</td></tr>
+  <tr><td>3.2</td><td><span class="cb"></span>Install the Arduino IDE 2. <i>Boards Manager:</i> <span class="mono">esp32 by Espressif Systems</span> <b>3.3.12</b>. <i>Library Manager:</i> OneWire <b>2.3.8</b>, DallasTemperature <b>4.0.6</b>, Adafruit SHT31 Library <b>2.2.2</b> (it adds Adafruit BusIO). These exact versions compiled the firmware on 12 Oct. <b>Follow the Build tutorial</b> (a separate PDF) for every click.</td><td>TL</td><td>1 h</td><td>The sketch compiles.</td></tr>
   <tr><td>3.3</td><td><span class="cb"></span>Wire each station as in <b>Appendix 3</b>, <b>soldered on perfboard</b> (a breadboard shakes loose in a field). Seal the top of each soil sensor’s electronics with heat-shrink or sealant.</td><td>TL</td><td>3 h a station</td><td>Wiring checked against the table by a second person.</td></tr>
   <tr><td>3.4</td><td><span class="cb"></span>Copy <span class="mono">config.example.h</span> to <span class="mono">config.h</span>. Enter the Wi-Fi name and password, <span class="mono">API_URL</span> (platform address + <span class="mono">/api/ingest</span>) and the <b>Rehearsal</b> key. Upload. Open <i>Serial Monitor</i> at 115200 baud: you should see the readings and <span class="mono">POST 201</span>.</td><td>TL</td><td>1 h</td><td>Readings from the real board appear on the platform. <b>Write down anything unexpected.</b></td></tr>
   <tr><td>3.5</td><td><span class="cb"></span><b>Calibrate each moisture sensor.</b> Hold it in dry air and note <span class="mono">soil_moisture_1_raw</span> on the platform (DRY). Stand it in a glass of water up to the white line (WET). Enter both in <span class="mono">config.h</span> and upload again.</td><td>TL</td><td>1 h</td><td>Air reads about 0%, water about 100%.</td></tr>
@@ -563,16 +500,18 @@ python3 devices/emulator/send_test_readings.py --url https://&lt;your-domain&gt;
 </tbody></table>
 
 <h2 id="app7">Appendix 7 · Sources and what is estimated</h2>
-<p class="small">Checked on 12 October 2026. Plans change often: confirm before you pay.</p>
+<p class="small">Checked on 12 and 13 October 2026. Plans and prices change often: confirm before you pay.</p>
 <ul class="small">
+  <li>Tirana Electronics: <span class="mono">tiranaelectronics.al</span>, including the product pages for the ESP32 board and soil moisture module, the electronic-components, sensor and module categories, and the shipping page (<span class="mono">/transporti/</span>).</li>
+  <li>DFRobot: SEN0193 (<span class="mono">dfrobot.com/product-1385.html</span>), the waterproof DS18B20 kit (<span class="mono">dfrobot.com/product-1354.html</span>) and the shipping terms (<span class="mono">dfrobot.com/shipping</span>).</li>
+  <li>Albanian customs, online purchases and postal consignments: <span class="mono">dogana.gov.al/english/c/226/online-shopping</span>. Commercial imports are not covered by that page.</li>
   <li>Railway blocks outbound SMTP on Free, Trial and Hobby plans and points to HTTPS email APIs: <span class="mono">docs.railway.com/networking/outbound-networking</span></li>
   <li>Resend free plan, 3,000 emails a month, 100 a day: <span class="mono">resend.com/pricing</span> (sources disagree on the number of domains: confirm)</li>
   <li>Railway Hobby, US$5 a month including US$5 of usage, from community and third-party sources: confirm at <span class="mono">railway.com/pricing</span></li>
-  <li>DFRobot SEN0193, about €4–10 depending on retailer (for example DigiKey). Output voltage is quoted differently by retailers: use the DFRobot datasheet.</li>
   <li>Teltonika RUT241, about €148 net at Bechtle, about €179 with VAT.</li>
   <li>Cheap “v1.2” soil sensor clones can carry the wrong 555 timer chip and misbehave at 3.3 V: <span class="mono">atomic14.com/esp32/sensors/capacitive-soil</span></li>
-  <li><b>Estimates, not quotes:</b> ESP32, DS18B20, SHT31, junction box, solar kit and tool prices come from the project’s own hardware README. Shipping and VAT (+30%) is a planning allowance. Mobile plan prices could not be confirmed.</li>
-  <li><b>Not verified:</b> any Albanian electronics retailer, courier lead times to Tirana, and Startup Albania’s rules on eligible costs.</li>
+  <li><b>Estimates, not quotes:</b> junction box, USB adapter, solar kit, consumables, tools and the TP-Link router come from the project’s hardware README and my own allowances. Shipping and VAT (+30%) is a planning allowance. Mobile plan prices come from travel blogs.</li>
+  <li><b>Not verified:</b> whether DFRobot, DigiKey, Mouser and Farnell deliver to Albania and at what cost (their pages did not name Albania or would not load); courier lead times to Tirana; how Albanian customs treats a company’s import (rates, VAT, duty); local sources for junction boxes, solar parts and 4G routers; Startup Albania’s rules on eligible costs.</li>
 </ul>
 
 </body>

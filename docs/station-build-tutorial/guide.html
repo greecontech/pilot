@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Build the soil moisture station from zero: hands-on tutorial</title>
+<link rel="stylesheet" href="../pilot-setup-guide/style.css">
+<style>
+@page { @bottom-left { content: "Greecon Platform · Station build tutorial v1.0"; font: 400 7.5pt "IBM Plex Serif", serif; color: #5d675f; } }
+.check { background: #eaf2ed; border-left: 3pt solid var(--ok); padding: 6pt 10pt; margin: 6pt 0 9pt; border-radius: 0 4pt 4pt 0; break-inside: avoid; }
+.check b.t { display: block; font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ok); margin-bottom: 2pt; }
+.check p:last-child, .check ul:last-child { margin-bottom: 0; }
+ol.st { padding-left: 17pt; } ol.st > li { margin-bottom: 5pt; padding-left: 2pt; }
+ol.st > li::marker { color: var(--green); font-weight: 600; }
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8pt; margin: 6pt 0 10pt; }
+.card { border: 1px solid var(--line); border-radius: 5pt; padding: 7pt 9pt 6pt; break-inside: avoid; background: #fff; }
+.card h4 { font-size: 9.6pt; margin: 0 0 4pt; }
+.card .sub { font-size: 7.6pt; color: var(--muted); margin-bottom: 4pt; }
+.w { display: flex; align-items: center; gap: 6pt; margin: 3.5pt 0; font-size: 8.6pt; }
+.w .n { width: 62pt; }
+.dot { width: 8pt; height: 8pt; border-radius: 50%; border: 1px solid rgba(0,0,0,.25); flex: none; }
+.arr { color: var(--muted); }
+.chip { padding: 1pt 7pt; border-radius: 8pt; font-weight: 600; font-size: 8pt; white-space: nowrap; }
+.chip.pw { background: #f3dcd8; color: #8f3d36; } .chip.gd { background: #2f3d35; color: #fff; }
+.chip.sg { background: #d8e8e0; color: #386f54; } .chip.v3 { background: #f6eddb; color: #8a6a2d; }
+.keys { display: flex; gap: 10pt; font-size: 7.8pt; color: var(--muted); margin: 6pt 0 8pt; flex-wrap: wrap; }
+.out { font-family: "DejaVu Sans Mono", Menlo, monospace; font-size: 7.4pt; line-height: 1.4; background: #1f2a24; color: #dfe9e2; border-radius: 4pt; padding: 7pt 9pt; margin: 4pt 0 8pt; white-space: pre-wrap; overflow-wrap: anywhere; break-inside: avoid; }
+.out .g { color: #8fd1ab; } .out .r { color: #f0a49c; } .out .m { color: #9fb0a6; }
+.kbd { font-family: "DejaVu Sans Mono", Menlo, monospace; font-size: 7.8pt; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3pt; padding: 0 3pt; background: #fff; }
+h2 { margin-top: 18pt; }
+</style>
+</head>
+<body>
+
+<!-- ═════════════ COVER ═════════════ -->
+<section class="cover">
+  <div class="brand"><img src="../pilot-setup-guide/img/greecon-logo.svg" alt=""><div><span>GREECON</span><small>PLATFORM</small></div></div>
+  <h1>Build the station<br>from zero</h1>
+  <div class="sub">Hands-on tutorial for the technician</div>
+  <div class="rule"></div>
+  <p class="lede">From an empty desk to a soil moisture station that sends a reading to Greecon Platform every 10 minutes. Follow it in order. Every stage ends with a <b>check</b> that tells you it worked before you go on.</p>
+  <table>
+    <tr><td>Companion to</td><td><i>Soil moisture pilot: setup guide for the project manager</i> (what to do and when). This tutorial is the <i>how</i>.</td></tr>
+    <tr><td>Firmware</td><td><span class="mono">devices/esp32-soil-moisture</span> in <span class="mono">greecontech/pilot</span>, compiled with <span class="mono">esp32</span> core 3.3.12</td></tr>
+    <tr><td>What is proven</td><td>The platform side was run end to end and the firmware compiles. <b>The firmware has not yet run on a real board: you are the first.</b> Write down everything unexpected.</td></tr>
+    <tr><td>Version</td><td>1.0 · 13 October 2026</td></tr>
+  </table>
+  <div class="foot">Output samples marked “example” show the format, not your numbers. Values such as 2,950 or 1,320 are illustrations.</div>
+</section>
+
+<!-- ═════════════ CONTENTS + ROADMAP ═════════════ -->
+<h1>The road map</h1>
+<p class="muted" style="margin-top:4pt">Eight stages, in this order. Stages 1 and 2 need no hardware, so do them while the parts are still in the post.</p>
+
+<figure>
+<svg viewBox="0 0 680 160" width="100%" role="img" aria-label="Eight stages from putting the platform online to installing at the farm">
+  <g font-family="IBM Plex Serif, Georgia, serif" fill="#1a211d" text-anchor="middle">
+    <line x1="52" y1="78" x2="628" y2="78" stroke="#448561" stroke-width="3"/>
+    <g id="stops">
+      <circle cx="52" cy="78" r="15" fill="#448561"/><text x="52" y="83" font-size="13" font-weight="600" fill="#fff">1</text>
+      <circle cx="124" cy="78" r="15" fill="#448561"/><text x="124" y="83" font-size="13" font-weight="600" fill="#fff">2</text>
+      <circle cx="196" cy="78" r="15" fill="#448561"/><text x="196" y="83" font-size="13" font-weight="600" fill="#fff">3</text>
+      <circle cx="268" cy="78" r="15" fill="#448561"/><text x="268" y="83" font-size="13" font-weight="600" fill="#fff">4</text>
+      <circle cx="340" cy="78" r="15" fill="#448561"/><text x="340" y="83" font-size="13" font-weight="600" fill="#fff">5</text>
+      <circle cx="412" cy="78" r="15" fill="#448561"/><text x="412" y="83" font-size="13" font-weight="600" fill="#fff">6</text>
+      <circle cx="484" cy="78" r="15" fill="#448561"/><text x="484" y="83" font-size="13" font-weight="600" fill="#fff">7</text>
+      <circle cx="556" cy="78" r="15" fill="#448561"/><text x="556" y="83" font-size="13" font-weight="600" fill="#fff">8</text>
+      <path d="M628 66 L650 78 L628 90 Z" fill="#448561"/>
+    </g>
+    <g font-size="9.6" font-weight="600">
+      <text x="52" y="116">Platform</text><text x="52" y="129">online</text>
+      <text x="124" y="116">Station</text><text x="124" y="129">identity</text>
+      <text x="196" y="116">Computer</text><text x="196" y="129">set up</text>
+      <text x="268" y="116">Wire it</text>
+      <text x="340" y="116">Configure</text><text x="340" y="129">and flash</text>
+      <text x="412" y="116">Calibrate</text>
+      <text x="484" y="116">Burn-in</text>
+      <text x="556" y="116">Install</text>
+    </g>
+    <g font-size="8.8" fill="#5d675f">
+      <text x="52" y="52">3 h</text><text x="124" y="52">1 h</text><text x="196" y="52">1 h</text><text x="268" y="52">3 h a unit</text>
+      <text x="340" y="52">1 h</text><text x="412" y="52">1 h</text><text x="484" y="52">72 h</text><text x="556" y="52">½ day</text>
+      <text x="52" y="146">section 2</text><text x="124" y="146">section 3</text><text x="196" y="146">section 4</text><text x="268" y="146">section 5</text>
+      <text x="340" y="146">section 6</text><text x="412" y="146">section 7</text><text x="484" y="146">section 8</text><text x="556" y="146">section 10</text>
+    </g>
+    <text x="650" y="108" font-size="9" font-weight="600" fill="#386f54">4 weeks</text><text x="650" y="120" font-size="9" font-weight="600" fill="#386f54">of pilot</text>
+  </g>
+</svg>
+<figcaption>Figure 1. Hands-on time for each stage. The 72-hour burn-in is waiting time; you can build the second unit meanwhile.</figcaption>
+</figure>
+
+<ul class="toc" id="toc">
+  <li><span class="n">1</span><span class="t">Before you start</span><span class="d">Parts, tools, labels</span><span class="p" data-find="1 · Before you start"></span></li>
+  <li><span class="n">2</span><span class="t">Put the platform online</span><span class="d">Railway, variables, first sign-in</span><span class="p" data-find="2 · Put the platform online"></span></li>
+  <li><span class="n">3</span><span class="t">Give the station an identity, and rehearse</span><span class="d">Site, source, key, simulated readings</span><span class="p" data-find="3 · Give the station an identity"></span></li>
+  <li><span class="n">4</span><span class="t">Set up your computer</span><span class="d">Arduino IDE, ESP32 core, libraries</span><span class="p" data-find="4 · Set up your computer"></span></li>
+  <li><span class="n">5</span><span class="t">Wire the station</span><span class="d">Wiring cards, soldering, checks before power</span><span class="p" data-find="5 · Wire the station"></span></li>
+  <li><span class="n">6</span><span class="t">Configure and flash</span><span class="d">config.h line by line, first upload</span><span class="p" data-find="6 · Configure and flash"></span></li>
+  <li><span class="n">7</span><span class="t">Calibrate the soil sensors</span><span class="d">Dry and wet values, a worked example</span><span class="p" data-find="7 · Calibrate the soil sensors"></span></li>
+  <li><span class="n">8</span><span class="t">Burn-in</span><span class="d">72 hours, pass or fail, alert test</span><span class="p" data-find="8 · Burn-in"></span></li>
+  <li><span class="n">9</span><span class="t">Power: mains and solar</span><span class="d">The reliable option, and the one that needs testing</span><span class="p" data-find="9 · Power: mains and solar"></span></li>
+  <li><span class="n">10</span><span class="t">Install at the farm</span><span class="d">Box, sensors, signal, hand-over</span><span class="p" data-find="10 · Install at the farm"></span></li>
+  <li><span class="n">11</span><span class="t">When it does not work</span><span class="d">Symptoms, messages, fixes</span><span class="p" data-find="11 · When it does not work"></span></li>
+  <li><span class="n">A</span><span class="t">Reference</span><span class="d">config.h settings, what the station sends, commands</span><span class="p" data-find="Reference · config.h"></span></li>
+</ul>
+
+<div class="callout"><b class="t">How the station works, in 30 seconds</b>
+<p class="small" style="margin:0">The ESP32 sleeps. Every 10 minutes it wakes, switches on power to the sensors for a moment, reads two soil moisture sensors and a soil temperature probe, joins Wi-Fi, sends the readings to the platform over HTTPS with its key, and goes back to sleep. The platform stores them, draws them, checks them against the limits and emails the farmer. <b>If Wi-Fi is down at that moment, that reading is lost</b>: the station does not store readings. Signal strength is therefore what protects the 95% availability target.</p></div>
+
+<!-- ═════════════ 1 ═════════════ -->
+<h2 class="pb" id="s1">1 · Before you start</h2>
+<h3>Parts for one station</h3>
+<table>
+  <tr><th>Part</th><th class="r">Qty</th><th>Test it now</th></tr>
+  <tr><td><b>ESP32 DevKitC</b>, classic ESP32-WROOM-32</td><td class="r">1 (+1 spare)</td><td>Plug into a computer by USB. A serial port should appear (step 4.5). If the board is a bare module or has no USB socket, stop and ask Eridon.</td></tr>
+  <tr><td><b>DFRobot SEN0193</b> capacitive soil moisture sensor</td><td class="r">2 (+1 spare)</td><td>Look for cracks or a missing component. The sensor’s electronics are at the top; the <b>white line</b> marks how deep it may go.</td></tr>
+  <tr><td><b>DS18B20</b> waterproof temperature probe + <b>4.7 kΩ</b> resistor</td><td class="r">1 (+1 spare)</td><td>Three wires: red, black, yellow. The resistor’s value is printed in colour bands: yellow, violet, red.</td></tr>
+  <tr><td><b>IP65 box</b> with cable glands</td><td class="r">1</td><td>The lid seals; the glands fit the cables.</td></tr>
+  <tr><td>5 V USB adapter and a USB <b>data</b> cable</td><td class="r">1</td><td>A charge-only cable lets the board power up but never shows a port.</td></tr>
+  <tr><td>Perfboard, jumper wires, heat-shrink, solder, sealant, cable ties</td><td class="r">1 lot</td><td>–</td></tr>
+  <tr><td>SHT31 breakout (optional, greenhouse)</td><td class="r">0–1</td><td>Only if the plot is a greenhouse.</td></tr>
+</table>
+<p><b>Tools:</b> soldering iron and solder, multimeter, small screwdrivers, wire cutters and strippers, a heat gun or lighter for heat-shrink, a glass of water, a laptop with a USB port.</p>
+<h3>Label everything</h3>
+<p>Write “Station 1” on the board and the box. Mark each sensor and its cable with a tag: <b>S1-A</b> for the shallow sensor, <b>S1-B</b> for the deep one. A sensor swapped by mistake gives a calibration that looks wrong and takes an hour to find.</p>
+<div class="callout"><b class="t">Keep a build notebook</b><p class="small" style="margin:0">Date, what you did, what you saw, anything odd. Since this firmware has never run on a board, your notes become part of the pilot’s test results (deliverable D5).</p></div>
+
+<!-- ═════════════ 2 ═════════════ -->
+<h2 id="s2">2 · Put the platform online</h2>
+<p>The platform is the half of the system that already works. Skip this stage if Eridon confirms it is already deployed; you still need an administrator account.</p>
+<ol class="st">
+  <li><b>Open a Railway account</b> at railway.com with the company email. Choose the <b>Hobby</b> plan and turn on two-factor sign-in. (Railway’s Hobby plan blocks outbound SMTP: that is why the platform sends email through Resend’s web API.)</li>
+  <li>Choose <i>New Project → Deploy from GitHub repo</i> and select the Greecon Platform repository. Railway reads <span class="mono">railway.json</span> and builds the <span class="mono">Dockerfile</span>.</li>
+  <li>In the same project choose <i>+ New → Database → PostgreSQL</i>.</li>
+  <li>Open the app service, go to <i>Variables</i> and add these. Generate <span class="mono">SESSION_SECRET</span> with your password manager (40+ random characters) or with <span class="mono">openssl rand -base64 48</span>.</li>
+</ol>
+<pre>DATABASE_URL=${{Postgres.DATABASE_URL}}
+SESSION_SECRET=&lt;40 or more random characters&gt;
+ADMIN_EMAIL=&lt;your company email&gt;
+ADMIN_PASSWORD=&lt;a strong password, 8+ characters&gt;
+ADMIN_NAME=&lt;your name&gt;
+SEED_DEMO=false
+SIMULATOR=false
+PROJECT_START_DATE=2026-08-01
+APP_TIMEZONE=Europe/Tirane</pre>
+<p class="small">The <span class="mono">ADMIN_*</span> variables only matter on the very first start, when the user table is empty. <span class="mono">SEED_DEMO=false</span> and <span class="mono">SIMULATOR=false</span> keep demo data out of the pilot. Email variables are added in the setup guide (Phase 2).</p>
+<ol class="st" start="5">
+  <li>Open the service’s <i>Settings → Networking → Generate Domain</i>. Wait for the deployment to turn green (a minute or two).</li>
+  <li>Open <span class="mono">https://&lt;your-domain&gt;/api/health</span> in a browser.</li>
+  <li>Open the domain itself, sign in with <span class="mono">ADMIN_EMAIL</span> and <span class="mono">ADMIN_PASSWORD</span>, go to <i>Account</i> and <b>change the password</b>.</li>
+</ol>
+<div class="check"><b class="t">Check</b><p class="small">The health page shows <span class="mono">{"status":"ok","database":"ok","time":"…"}</span> and you can sign in. If it shows <span class="mono">"status":"degraded"</span>, the app cannot reach PostgreSQL: check that <span class="mono">DATABASE_URL</span> is exactly as above and that the database service is running.</p></div>
+
+<!-- ═════════════ 3 ═════════════ -->
+<h2 id="s3">3 · Give the station an identity, and rehearse</h2>
+<p>Every device has its own <b>key</b>. You create the site and the device on the platform first; the key is what the station presents when it uploads. You will first use a throw-away device called “Rehearsal”, so test data never mixes with pilot data.</p>
+<ol class="st">
+  <li>Go to <i>Sites &amp; sources</i>. Under <i>Add a site</i>, enter the name “Pilot farm”, sector <b>Agriculture</b>, and the location. Press <i>Add site</i>.</li>
+  <li>On the new site choose <i>Add a data source to this site</i>. Kind: <b>Device</b>. Name: <b>Rehearsal</b>. Press <i>Add source</i>.</li>
+  <li><b>Copy the key now.</b> It looks like <span class="mono">gk_4c078cc4_…</span> and is shown only once. Put it in the password manager. If you lose it, use <i>New API key</i> on that source.</li>
+  <li>On a computer with Python 3, in the repository folder, send a simulated reading:</li>
+</ol>
+<div class="out"><span class="m">$</span> python3 devices/emulator/send_test_readings.py --url https://&lt;your-domain&gt; --key gk_xxxxxxxx_…
+<span class="g">201 {"inserted":6,"alertsOpened":0,"metricsCreated":6}</span>   <span class="m">(example: the format is real, taken from a test run)</span></div>
+<ol class="st" start="5">
+  <li>Refresh <i>Sites &amp; sources</i>. Six metrics have appeared under “Rehearsal”: <span class="mono">soil_moisture_1</span>, <span class="mono">soil_moisture_2</span>, their two <span class="mono">_raw</span> twins, <span class="mono">soil_temp</span> and <span class="mono">wifi_rssi</span>. They are created automatically on the first upload.</li>
+  <li>Click <i>Edit</i> on <b>Soil moisture 1</b>, set <b>Lower limit 28</b>, press <i>Save</i>. Do the same for <b>Soil moisture 2</b>.</li>
+  <li>Simulate dry soil:</li>
+</ol>
+<div class="out"><span class="m">$</span> python3 devices/emulator/send_test_readings.py --url https://&lt;your-domain&gt; --key gk_xxxxxxxx_… <b>--dry</b>
+<span class="g">201 {"inserted":6,"alertsOpened":2,"metricsCreated":0}</span></div>
+<div class="check"><b class="t">Check</b><p class="small">Two alerts appear on the <i>Alerts</i> page and the dashboard. After the email service is set up (setup guide, step 2.8) one email arrives for both. A normal run of the emulator without <span class="mono">--dry</span> closes the alerts. A wrong key answers <span class="mono">401 {"error":"Invalid API key"}</span>; a deactivated source answers <span class="mono">403</span>.</p></div>
+
+<!-- ═════════════ 4 ═════════════ -->
+<h2 class="pb" id="s4">4 · Set up your computer</h2>
+<ol class="st">
+  <li>Download and install the <b>Arduino IDE 2</b> from arduino.cc/en/software.</li>
+  <li>Open <i>File → Preferences</i> (<i>Arduino IDE → Settings</i> on a Mac). In <b>Additional boards manager URLs</b> paste exactly:</li>
+</ol>
+<pre>https://espressif.github.io/arduino-esp32/package_esp32_index.json</pre>
+<ol class="st" start="3">
+  <li>Open the <b>Boards Manager</b> (left sidebar), search <b>esp32</b>, choose <b>“esp32 by Espressif Systems”</b>, pick version <b>3.3.12</b> in the version list and press <i>Install</i>. It downloads several hundred megabytes: use a good connection.</li>
+  <li>Open the <b>Library Manager</b> and install, each at the stated version: <b>OneWire 2.3.8</b>, <b>DallasTemperature 4.0.6</b>, <b>Adafruit SHT31 Library 2.2.2</b>. When asked about dependencies, press <i>Install all</i> (this adds Adafruit BusIO). These are the exact versions that compiled the firmware; newer ones probably work, but if anything breaks, go back to these.</li>
+  <li>Plug the ESP32 into the computer with the USB <b>data</b> cable. In <i>Tools → Port</i> a new port should appear (<span class="mono">COM3</span> or similar on Windows, <span class="mono">/dev/cu.usbserial…</span> on a Mac). If none appears: try another cable, then install the driver for the USB chip printed on the board (CP210x from Silicon Labs, or CH340 from WCH).</li>
+  <li>Open the sketch: <i>File → Open…</i> → <span class="mono">devices/esp32-soil-moisture/esp32-soil-moisture.ino</span>. Select <i>Tools → Board → esp32 → <b>ESP32 Dev Module</b></i> and the port from step 5.</li>
+  <li>In that same folder copy <span class="mono">config.example.h</span> to <span class="mono">config.h</span> (the real file with secrets is never committed to git).</li>
+  <li>Press the tick button (<b>Verify</b>) to compile.</li>
+</ol>
+<div class="check"><b class="t">Check</b><p class="small">The compile ends with a line like “Sketch uses 1062600 bytes (81%) of program storage space”. The figures differ slightly by IDE version; red error text does not. An error “fatal error: config.h: No such file” means step 7 was skipped.</p></div>
+
+<!-- ═════════════ 5 ═════════════ -->
+<h2 id="s5">5 · Wire the station</h2>
+<p>Do this with <b>no power connected</b>. The board has pins named on its silkscreen (<span class="mono">GPIO25</span> may be printed as <span class="mono">25</span> or <span class="mono">D25</span>); pin positions differ between makers, so always go by the names.</p>
+<div class="keys"><span><span class="chip pw">switched 3.3 V</span> power, from GPIO25</span><span><span class="chip gd">GND</span> ground</span><span><span class="chip sg">signal</span> data back to the board</span><span><span class="chip v3">3V3</span> constant 3.3 V</span></div>
+<div class="cards">
+  <div class="card"><h4>Soil sensor 1 (shallow)</h4><div class="sub">SEN0193, three wires</div>
+    <div class="w"><span class="n">VCC</span><span class="arr">→</span><span class="chip pw">GPIO25</span></div>
+    <div class="w"><span class="n">GND</span><span class="arr">→</span><span class="chip gd">GND</span></div>
+    <div class="w"><span class="n">AOUT</span><span class="arr">→</span><span class="chip sg">GPIO34</span></div></div>
+  <div class="card"><h4>Soil sensor 2 (deep)</h4><div class="sub">SEN0193, three wires</div>
+    <div class="w"><span class="n">VCC</span><span class="arr">→</span><span class="chip pw">GPIO25</span></div>
+    <div class="w"><span class="n">GND</span><span class="arr">→</span><span class="chip gd">GND</span></div>
+    <div class="w"><span class="n">AOUT</span><span class="arr">→</span><span class="chip sg">GPIO35</span></div></div>
+  <div class="card"><h4>Soil temperature probe</h4><div class="sub">DS18B20 and a 4.7 kΩ resistor</div>
+    <div class="w"><span class="dot" style="background:#c0392b"></span><span class="n">red</span><span class="arr">→</span><span class="chip pw">GPIO25</span></div>
+    <div class="w"><span class="dot" style="background:#111"></span><span class="n">black</span><span class="arr">→</span><span class="chip gd">GND</span></div>
+    <div class="w"><span class="dot" style="background:#e6b800"></span><span class="n">yellow (data)</span><span class="arr">→</span><span class="chip sg">GPIO4</span></div>
+    <div class="w"><span class="n" style="width:auto">4.7 kΩ resistor between</span><span class="chip sg">GPIO4</span><span class="arr">and</span><span class="chip v3">3V3</span></div></div>
+  <div class="card"><h4>Air sensor (greenhouse only)</h4><div class="sub">SHT31 breakout. Leave out if not used</div>
+    <div class="w"><span class="n">VIN</span><span class="arr">→</span><span class="chip v3">3V3</span></div>
+    <div class="w"><span class="n">GND</span><span class="arr">→</span><span class="chip gd">GND</span></div>
+    <div class="w"><span class="n">SDA</span><span class="arr">→</span><span class="chip sg">GPIO21</span></div>
+    <div class="w"><span class="n">SCL</span><span class="arr">→</span><span class="chip sg">GPIO22</span></div></div>
+</div>
+<ul class="small">
+  <li><b>GPIO25 feeds three wires</b> (both soil sensors and the probe’s red wire). The firmware switches it on only while measuring: that saves energy and slows corrosion of the sensors.</li>
+  <li><b>The soil sensors must stay on GPIO34 and GPIO35.</b> These are ADC1 pins; ADC2 pins stop working while Wi-Fi is on.</li>
+  <li>Power to the board is separate: USB into the board’s socket (section 9).</li>
+</ul>
+<h3>Build it</h3>
+<ol class="st">
+  <li><b>Plan the layout</b> on paper first: the board on two rows of female headers soldered to the perfboard (so you can swap a dead board), and three rails: switched power (from GPIO25), ground, and 3V3.</li>
+  <li><b>Solder the headers and the rails.</b> Keep the switched rail <b>separate</b> from 3V3. Joining them is the most common mistake: sensors would then be powered all the time.</li>
+  <li><b>Connect each sensor through a connector</b> (a 3-pin header or a screw terminal) rather than soldering the sensor cable to the board, so a failed sensor can be swapped in the field in a minute. Check what the other end of the supplied sensor cable is: Dupont sockets plug into pin headers; bare wires need a terminal block or soldering.</li>
+  <li><b>Fit the 4.7 kΩ resistor</b> between the probe’s data line (GPIO4) and 3V3.</li>
+  <li><b>Seal each soil sensor’s electronics:</b> cover the top, where the cable joins the board, with heat-shrink or sealant. Never cover the lower, sensing part. The white line is the deepest the sensor may go into soil.</li>
+</ol>
+<div class="check"><b class="t">Checks before you apply power</b>
+<ul class="small">
+  <li><b>No short:</b> multimeter on continuity (beep) between the board’s <span class="mono">3V3</span> and <span class="mono">GND</span>: it must <b>not</b> beep. Do the same between the switched rail and GND, and between the switched rail and 3V3.</li>
+  <li><b>Right pins:</b> with continuity, touch each sensor’s AOUT lead and the matching GPIO pin: GPIO34 ↔ S1-A, GPIO35 ↔ S1-B, GPIO4 ↔ probe data.</li>
+  <li><b>After first power-up</b> (section 6): measure the current on the switched rail with the meter in series, while the station is measuring. If it is above about 20 mA, tell Eridon: the sensors should then be switched through a transistor rather than straight from the pin. I have not measured it; this is a design point to verify on the bench.</li>
+</ul></div>
+
+<!-- ═════════════ 6 ═════════════ -->
+<h2 id="s6">6 · Configure and flash</h2>
+<p>Open <span class="mono">config.h</span> (in the Arduino IDE it is a tab next to the sketch) and set each value:</p>
+<pre>#define WIFI_SSID       "Office-Wifi"            // name, exactly as shown, upper and lower case
+#define WIFI_PASSWORD   "the-wifi-password"
+#define API_URL         "https://your-app.up.railway.app/api/ingest"   // your domain + /api/ingest
+#define API_KEY         "gk_4c078cc4_..."        // the Rehearsal key from section 3
+#define SLEEP_MINUTES   1                        // 1 for the bench; set back to 10 before burn-in
+#define USE_SOIL_1      1
+#define USE_SOIL_2      1
+#define USE_SOIL_TEMP   1
+#define USE_AIR         0                        // 1 only with an SHT31
+// SOIL_n_DRY / SOIL_n_WET stay at 3000 / 1300 until section 7.</pre>
+<ul class="small">
+  <li><b>Wi-Fi must be 2.4 GHz.</b> The ESP32 cannot join 5 GHz-only networks. A hotspot page that asks you to accept terms (a captive portal) will not work.</li>
+  <li><b>API_URL</b> starts with <span class="mono">https://</span> and ends with <span class="mono">/api/ingest</span>, with no spaces.</li>
+  <li><b>Set <span class="mono">USE_…</span> to 0</b> for any sensor you have not connected.</li>
+</ul>
+<ol class="st">
+  <li>Press <b>Upload</b> (the arrow). If it stops at “Connecting……”, hold the board’s <span class="kbd">BOOT</span> button until the upload starts, then release. If the upload fails at speed 921600, choose <i>Tools → Upload Speed → 115200</i>.</li>
+  <li>Open <i>Tools → Serial Monitor</i> and set the speed to <b>115200 baud</b>. Press the board’s <span class="kbd">EN</span> (reset) button to start a measurement cycle.</li>
+</ol>
+<p>You should see the readings the station is about to send, then the platform’s answer:</p>
+<div class="out"><span class="m">{"readings":[{"metric":"soil_moisture_1","value":31.42,"unit":"%","name":"Soil moisture 1"},
+ {"metric":"soil_moisture_1_raw","value":2160.00,"unit":"raw","name":"Soil moisture 1 (raw)"},
+ … soil_moisture_2, soil_moisture_2_raw, soil_temp, wifi_rssi …]}</span>
+<span class="g">POST 201: {"inserted":6,"alertsOpened":0,"metricsCreated":0}</span>   <span class="m">(example values)</span></div>
+<p>Then the board sleeps. After <span class="mono">SLEEP_MINUTES</span> it wakes, resets and prints the chip’s boot lines before the next JSON: that is normal.</p>
+<div class="check"><b class="t">Check · the first time this firmware runs on hardware</b><p class="small">In the platform, <i>Data</i> (filter the “Rehearsal” source) shows readings with origin <i>api</i> and fresh timestamps, and <i>Sites &amp; sources</i> says “last data just now”. <b>Write down anything that surprises you</b>, even if it seems minor.</p></div>
+<table>
+  <tr><th style="width:160pt">Serial Monitor says</th><th>It means</th></tr>
+  <tr><td><span class="mono">Wi-Fi not available; will retry at the next wake-up.</span></td><td>Wrong name or password, 5 GHz only, or out of range. The reading is lost.</td></tr>
+  <tr><td><span class="mono">POST 401: {"error":"Invalid API key"}</span></td><td>The key is wrong, was replaced, or has a stray space or missing character.</td></tr>
+  <tr><td><span class="mono">POST 403</span></td><td>The source is deactivated on the platform.</td></tr>
+  <tr><td><span class="mono">POST -1</span> (and <span class="mono">Upload failed</span>)</td><td>No connection to the server: the URL is wrong, or the Wi-Fi has no internet. See section 11 for all codes.</td></tr>
+  <tr><td><span class="mono">POST 422</span> with “value must be a number”</td><td>A sensor returned something that is not a number. Send the line to Eridon.</td></tr>
+</table>
+
+<!-- ═════════════ 7 ═════════════ -->
+<h2 id="s7">7 · Calibrate the soil sensors</h2>
+<p>The sensor measures how much the soil changes an electric field. The board turns that raw number (0–4095) into a percentage using two reference points you measure: <b>DRY</b> (the sensor in open air) and <b>WET</b> (in water). Every sensor is a little different, so each gets its own pair. Calibrate on the <b>finished wiring</b>, powered the way it will be in the field.</p>
+<ol class="st">
+  <li>Set <span class="mono">SLEEP_MINUTES</span> to 1 so you get a fresh reading every minute. Upload.</li>
+  <li><b>DRY:</b> wipe the sensor, hold it in the air, away from your hand and from metal. Wait for 3 readings. Note <span class="mono">soil_moisture_1_raw</span> (in the Serial Monitor JSON, or on the platform under <i>Data</i>). Take the typical value.</li>
+  <li><b>WET:</b> stand the sensor in a glass of water <b>up to the white line only</b>. Wait for 3 readings and note the raw value.</li>
+  <li>Enter both in <span class="mono">config.h</span>: <span class="mono">SOIL_1_DRY</span> and <span class="mono">SOIL_1_WET</span>. Repeat for sensor 2 with its own numbers. Upload.</li>
+</ol>
+<div class="card" style="margin:6pt 0 8pt">
+  <h4>Worked example (illustrative numbers)</h4>
+  <p class="small" style="margin:0">Sensor 1 reads <b>2,950</b> in air and <b>1,320</b> in water, so <span class="mono">SOIL_1_DRY 2950</span> and <span class="mono">SOIL_1_WET 1320</span>. The firmware computes<br>
+  <span class="mono">percent = 100 × (DRY − raw) / (DRY − WET)</span>, limited to 0–100.<br>
+  A raw reading of 2,100 gives 100 × (2950 − 2100) / (2950 − 1320) = 100 × 850 / 1630 = <b>52.1%</b>. A raw reading of 2,600 gives <b>21.5%</b>. Wetter soil gives a <i>lower</i> raw number: that is normal for this sensor.</p>
+</div>
+<div class="check"><b class="t">Check</b><p class="small">In air the platform shows about <b>0%</b>; in the glass about <b>100%</b>; and in between it moves smoothly as you lift the sensor out slowly. If it shows 0% in water and 100% in air, DRY and WET are swapped.</p></div>
+<p class="small"><b>Honest limits.</b> A percentage from a capacitive sensor is relative to <i>your</i> two reference points, not an absolute soil water content: soil type, compaction and salinity change the reading. In the field the <b>trend</b> matters more than the exact number. After installation, ask the farmer when the soil is “just irrigated” and when it “needs water”, note the readings at those moments, and adjust the lower limit to match.</p>
+
+<!-- ═════════════ 8 ═════════════ -->
+<h2 id="s8">8 · Burn-in</h2>
+<p>Burn-in finds the faults that only appear after hours: a loose joint, a Wi-Fi dropout, a board that resets. Set <span class="mono">SLEEP_MINUTES</span> back to <b>10</b>, upload, and leave the station running <b>72 hours</b> indoors, where the farm’s Wi-Fi or router would be, with the sensors in a glass of water or in a pot of damp soil.</p>
+<table>
+  <tr><th>Test</th><th>How</th><th>Pass</th></tr>
+  <tr><td><b>Availability</b></td><td><i>Monitoring → From / To</i> over the 72 hours, “readings in period” for each metric</td><td>At least <b>410 of 432</b> (95%). Expect about 425: each cycle is a few seconds longer than 10 minutes, so about 1–2% of readings never happen.</td></tr>
+  <tr><td><b>No resets or gaps</b></td><td>The chart has no holes longer than one or two readings</td><td>No gap over 30 minutes</td></tr>
+  <tr><td><b>Smooth curves</b></td><td><i>Monitoring</i>, each moisture metric</td><td>No spikes, no stuck values</td></tr>
+  <tr><td><b>Signal</b></td><td>Metric <span class="mono">wifi_rssi</span></td><td>Always above −80 dBm</td></tr>
+  <tr><td><b>Alert chain with the real board</b></td><td>Set the lower limit to 28 on the Rehearsal source. Leave sensor 1 in water for 20 minutes, then lift it out into the air. Within two or three readings it falls below 28%.</td><td>An alert appears on the dashboard and <b>one email</b> arrives.</td></tr>
+</table>
+<div class="check"><b class="t">Check</b><p class="small">All five pass. If one fails, find the cause (section 11) and <b>start the 72 hours again</b>. When it passes, delete the Rehearsal source, create a source for each station (“Station 1”, “Station 2”) with its own key, put that key in the station’s <span class="mono">config.h</span> and upload.</p></div>
+
+<!-- ═════════════ 9 ═════════════ -->
+<h2 class="pb" id="s9">9 · Power: mains and solar</h2>
+<h3>9.1 Mains with a USB adapter (use this if you can)</h3>
+<ol class="st">
+  <li>A 5 V USB adapter of at least 1 A, plugged into the board’s USB socket. Keep the adapter <b>indoors or under cover</b>; only the thin USB cable goes to the box.</li>
+  <li>Pass the cable through a <b>cable gland</b> in the box, with a loop hanging below the gland so rain runs off the loop and not into the box (a “drip loop”).</li>
+  <li>Use an outdoor-rated extension if the socket is far. A farm’s mains can drop out: expect some gaps and log them.</li>
+</ol>
+<h3>9.2 Solar (advanced; needs testing before you rely on it)</h3>
+<div class="callout stop"><b class="t">Status: reference design, not built or tested</b><p class="small" style="margin:0">Solar is the riskiest part of the pilot: November and December have short, often cloudy days, and the ESP32 board draws a few milliamps even asleep. A charger board alone <b>cannot</b> power the board: a lithium cell is 3.0–4.2 V, and the board’s 5 V input needs 5 V. Build and test this on the bench for 24–48 hours <b>before</b> it goes in a field. If the farm has any mains, use 9.1.</p></div>
+<p>Reference design: <b>6 V panel → protected TP4056 charger board → one 18650 cell → boost converter set to 5.0 V → the board’s 5 V (VIN) pin and GND.</b></p>
+<ol class="st">
+  <li>Buy the <b>TP4056 with the battery-protection chip</b> (the board with separate pads for battery, output and input). Without protection a flat cell is damaged.</li>
+  <li><b>Choose the booster by its input range.</b> One lithium cell is 3.0–4.2 V, so the module must accept at least 3 V (an MT3608-type module takes 2–24 V in). Some boost modules need 5 V in and will not start from one cell: read the module’s specification, do not assume. I have not tested any specific module.</li>
+  <li><b>Set the booster first.</b> Connect the cell only to the booster’s input, turn the small screw until a multimeter on its output reads <b>5.0 V</b>, and only then connect the board. Setting it while connected can destroy the board.</li>
+  <li><b>Never connect the USB cable and the booster at the same time</b>: the two 5 V sources can feed each other. Flash and configure with USB, then unplug USB before connecting the booster.</li>
+  <li><b>Bench-test it:</b> run the station from a charged cell with the panel disconnected for 24–48 hours. Measure the cell voltage at the start and end. It must stay above about 3.5 V. Then place the panel in the sun and confirm that the cell charges.</li>
+  <li><b>Place the panel</b> facing south, tilted about 45°, with no shade at any hour. Keep the cable short.</li>
+</ol>
+<p class="small muted">This is the reason the setup guide lists the solar kit as “if no mains”: Eridon must design and approve it, and the burn-in must be repeated on the solar supply.</p>
+
+<!-- ═════════════ 10 ═════════════ -->
+<h2 id="s10">10 · Install at the farm</h2>
+<p>Bring: the station, spare board and sensors, laptop and USB cable, multimeter, cable ties, sealant, tape, a glass and a bottle of water, a phone with hotspot, and the printed farmer card.</p>
+<ol class="st">
+  <li><b>Fix the box</b> in the shade, above the reach of the irrigation spray, with the cable glands facing <b>down</b>. Tighten each gland until the cable cannot be pulled out, and plug any unused gland.</li>
+  <li><b>Place the sensors in the root zone:</b> S1-A at 10–20 cm, S1-B at 20–40 cm (or in two spots in the plot). For hard soil make a pilot hole first with a screwdriver of similar width. Push the sensor by its <b>top edge only, never the electronics</b>, until the soil reaches the <b>white line</b>. Firm contact all round, no air gaps. Water the spot lightly so the soil settles around it.</li>
+  <li><b>Loop each cable downward</b> before it enters the box, so water cannot run along it inside. Tie it to a stake so wind cannot pull the sensor.</li>
+  <li><b>Switch on</b> (plug in or connect the panel). Wait 15 minutes.</li>
+  <li>On the platform check: <i>Sites &amp; sources</i> shows “last data just now”; <span class="mono">wifi_rssi</span> is above <b>−80 dBm</b>; both moisture sensors show plausible percentages for soil that is damp or dry. If the signal is weak, move the router or add an extender <b>now</b>.</li>
+  <li><b>Agree the lower limit with the farmer</b> (start at 25–30%, we suggest 28%), enter it on both moisture metrics, and ask when they irrigate today.</li>
+  <li>Show the farmer the alert email and the <i>Acknowledge</i> button, give them the farmer card, and make sure a test email reached <b>their own phone</b>.</li>
+  <li><b>Photograph</b> the box, the sensor positions and the plot, and note the date: it starts the 4-week clock.</li>
+</ol>
+<div class="check"><b class="t">Check</b><p class="small">An hour after you leave, open the platform from the office: the station is online, there are about six readings per metric, and the curves are smooth.</p></div>
+
+<!-- ═════════════ 11 ═════════════ -->
+<h2 id="s11">11 · When it does not work</h2>
+<table>
+  <tr><th style="width:118pt">Symptom</th><th>Do this</th></tr>
+  <tr><td><b>No serial port appears</b></td><td>Use a data cable, not a charge-only one. Try another USB port. Install the driver for the board’s USB chip (CP210x or CH340).</td></tr>
+  <tr><td><b>Upload stops at “Connecting…”</b></td><td>Hold the <span class="kbd">BOOT</span> button while it connects. Lower the upload speed to 115200.</td></tr>
+  <tr><td><b>“Brownout detector was triggered”</b></td><td>The supply is too weak: use a better USB cable or adapter (≥ 1 A). On solar, the cell is flat or the booster is set wrong.</td></tr>
+  <tr><td><b><span class="mono">POST -1</span> or <span class="mono">-4</span></b></td><td>Wi-Fi joined but the server is unreachable: wrong URL, or the router has no internet (SIM out of data, captive portal). Open the URL from a phone on the same Wi-Fi.</td></tr>
+  <tr><td><b><span class="mono">POST -5</span> or <span class="mono">-11</span></b></td><td>Connection dropped or timed out: weak signal. Move closer or add an extender. If the platform is slow to wake, retry later.</td></tr>
+  <tr><td><b><span class="mono">POST 401</span></b></td><td>The key does not match. Copy it again from the password manager, or create a new one with <i>New API key</i> and paste it into <span class="mono">config.h</span>.</td></tr>
+  <tr><td><b>Moisture stuck at 0% or 100%</b></td><td>DRY and WET swapped, or a faulty sensor, or a loose AOUT wire. Compare the <span class="mono">_raw</span> value in air and in water: if both are the same, the sensor is dead or unplugged.</td></tr>
+  <tr><td><b>Readings jump about</b></td><td>A loose joint, or a sensor cable running next to a mains cable. Re-solder, re-route, and shorten the cable.</td></tr>
+  <tr><td><b>Soil temperature missing</b></td><td>The probe is not connected, or the 4.7 kΩ resistor is missing. The firmware skips a probe that does not answer.</td></tr>
+  <tr><td><b>Reboots in a loop (“Guru Meditation Error”)</b></td><td>Note the full message and send it to Eridon. Try the spare board.</td></tr>
+  <tr><td><b>Works indoors, fails at the farm</b></td><td>It is nearly always the Wi-Fi: check <span class="mono">wifi_rssi</span> at the box’s spot, not at the router.</td></tr>
+</table>
+<p class="small muted">The numbers after <span class="mono">POST</span> are the web-client’s own codes when the request never completed: −1 refused, −4 not connected, −5 connection lost, −11 read timeout. Codes 200–599 are the platform’s HTTP answers.</p>
+
+<!-- ═════════════ APPENDIX ═════════════ -->
+<h2 class="pb" id="appA">Reference · config.h and what the station sends</h2>
+<h3>config.h settings</h3>
+<table>
+  <tr><th>Setting</th><th>Meaning</th><th>Pilot value</th></tr>
+  <tr><td><span class="mono">WIFI_SSID</span>, <span class="mono">WIFI_PASSWORD</span></td><td>Network the station joins (2.4 GHz)</td><td>The farm’s or the 4G router’s</td></tr>
+  <tr><td><span class="mono">API_URL</span></td><td>Full address of the platform’s ingestion endpoint</td><td><span class="mono">https://…/api/ingest</span></td></tr>
+  <tr><td><span class="mono">API_KEY</span></td><td>The device’s key, one per station</td><td>From <i>Sites &amp; sources</i></td></tr>
+  <tr><td><span class="mono">SLEEP_MINUTES</span></td><td>Minutes asleep between measurements</td><td><b>10</b> (1 only on the bench)</td></tr>
+  <tr><td><span class="mono">USE_SOIL_1</span>, <span class="mono">USE_SOIL_2</span></td><td>Moisture sensors on GPIO34 and GPIO35</td><td>1, 1</td></tr>
+  <tr><td><span class="mono">USE_SOIL_TEMP</span></td><td>DS18B20 on GPIO4</td><td>1</td></tr>
+  <tr><td><span class="mono">USE_AIR</span></td><td>SHT31 on GPIO21 and GPIO22</td><td>1 in a greenhouse, else 0</td></tr>
+  <tr><td><span class="mono">SOIL_n_DRY</span>, <span class="mono">SOIL_n_WET</span></td><td>Raw readings in air and in water, per sensor</td><td>Measured in section 7</td></tr>
+</table>
+<h3>What the station sends</h3>
+<table>
+  <tr><th>Metric key</th><th>Unit</th><th>What it is</th></tr>
+  <tr><td><span class="mono">soil_moisture_1</span>, <span class="mono">soil_moisture_2</span></td><td>%</td><td>Soil moisture, 0 = dry air, 100 = water. <b>These get the lower limit.</b></td></tr>
+  <tr><td><span class="mono">soil_moisture_1_raw</span>, <span class="mono">soil_moisture_2_raw</span></td><td>raw</td><td>The raw sensor number, for calibration and fault-finding</td></tr>
+  <tr><td><span class="mono">soil_temp</span></td><td>°C</td><td>DS18B20 soil temperature</td></tr>
+  <tr><td><span class="mono">air_temp</span>, <span class="mono">air_humidity</span></td><td>°C, %</td><td>SHT31, only if <span class="mono">USE_AIR</span> is 1</td></tr>
+  <tr><td><span class="mono">wifi_rssi</span></td><td>dBm</td><td>Signal strength, for diagnostics. Above −80 is good.</td></tr>
+</table>
+<h3>Good to know</h3>
+<ul class="small">
+  <li><b>Readings are not stored on the board.</b> If Wi-Fi or the platform is unreachable at wake-up, that reading is lost and the station sleeps until the next one.</li>
+  <li>The connection is encrypted (HTTPS) but the board does <b>not verify the server’s certificate</b>. This is a documented pilot simplification in the firmware; the device key is the only protection. Treat the key like a password.</li>
+  <li>The station sends no timestamp; the platform stamps each reading with its arrival time.</li>
+  <li>Changing the firmware needs the Arduino IDE and a USB cable at the box. Plan for a laptop on site if you must change Wi-Fi details.</li>
+</ul>
+<h3>Commands</h3>
+<pre># simulated healthy reading, and simulated dry soil (use only the Rehearsal key)
+python3 devices/emulator/send_test_readings.py --url https://&lt;your-domain&gt; --key &lt;key&gt;
+python3 devices/emulator/send_test_readings.py --url https://&lt;your-domain&gt; --key &lt;key&gt; --dry
+
+# platform health
+curl https://&lt;your-domain&gt;/api/health
+
+# compile the firmware without the IDE (optional)
+arduino-cli compile --fqbn esp32:esp32:esp32 devices/esp32-soil-moisture</pre>
+
+</body>
+</html>
