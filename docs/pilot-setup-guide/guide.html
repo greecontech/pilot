@@ -19,7 +19,7 @@
     <tr><td>Application</td><td>SA2026008101 · Greecon shpk · project ends <b>18 December 2026</b></td></tr>
     <tr><td>Prepared for</td><td>The project manager (budget line 1.1)</td></tr>
     <tr><td>Technical lead</td><td>Eridon Manuka, CEO and systems engineer</td></tr>
-    <tr><td>Version</td><td>1.1 · 13 October 2026 · code in <span class="mono">greecontech/pilot</span></td></tr>
+    <tr><td>Version</td><td>1.2 · 18 October 2026 · code in <span class="mono">greecontech/pilot</span></td></tr>
   </table>
   <div class="foot">Prices, plans and delivery times in this guide are estimates collected on 12 October 2026. They are marked “≈”. Confirm them before you pay.</div>
 </section>
@@ -272,21 +272,35 @@ and 3 x DFR0198, and send a pro-forma invoice in the company's name.</pre>
   <tr><td>2.2</td><td><span class="cb"></span><b>Open a Railway account</b> with the company email. Add a payment card, choose the <b>Hobby</b> plan and turn on two-factor sign-in.</td><td>PM</td><td>30 min</td><td>You can create a project.</td></tr>
   <tr><td>2.3</td><td><span class="cb"></span>In Railway choose <i>New Project → Deploy from GitHub repo</i> and select the Greecon Platform repository. Then <i>+ New → Database → PostgreSQL</i> in the same project. Railway builds the <span class="mono">Dockerfile</span> by itself.</td><td>PM, TL</td><td>30 min</td><td>The app service builds without errors.</td></tr>
   <tr><td>2.4</td><td><span class="cb"></span>On the app service, set the <b>variables in Appendix 2</b>. For <span class="mono">SESSION_SECRET</span>, let the password manager generate 40+ random characters. Use a strong <span class="mono">ADMIN_PASSWORD</span>.</td><td>PM</td><td>30 min</td><td>The deployment turns green.</td></tr>
-  <tr><td>2.5</td><td><span class="cb"></span><i>Settings → Networking → Generate Domain.</i> Open <span class="mono">https://&lt;your-domain&gt;/api/health</span>: it must show <span class="mono">"status":"ok"</span>. Sign in as the administrator and <b>change the password</b> under <i>Account</i>.</td><td>PM</td><td>15 min</td><td>Health check is ok. Admin password changed and saved.</td></tr>
+  <tr><td>2.5</td><td><span class="cb"></span><i>Settings → Networking → Generate Domain.</i> Open <span class="mono">https://&lt;your-domain&gt;/api/health</span>: it must show <span class="mono">"status":"ok"</span>. Sign in as the administrator and <b>change the password</b> under <i>Account</i>. Then open <b>Setup guide</b> in the sidebar (Figure 2): it lists the remaining steps and ticks each one itself.</td><td>PM</td><td>15 min</td><td>Health check is ok. Admin password changed and saved. <b>Setup guide</b> opens in the sidebar.</td></tr>
   <tr><td>2.6</td><td><span class="cb"></span><i>Recommended:</i> add the custom domain <span class="mono">platform.greecon.earth</span>. Railway shows a DNS record; the person who manages the DNS of greecon.earth creates it. Then set <span class="mono">APP_URL</span> to the new address.</td><td>PM, DNS owner</td><td>1 h + wait</td><td>The platform opens on platform.greecon.earth with a padlock.</td></tr>
   <tr><td>2.7</td><td><span class="cb"></span><b>Resend:</b> create an account at resend.com, add the domain <span class="mono">greecon.earth</span>, create the DNS records it lists and press <i>Verify</i>. Create an API key with sending access.</td><td>PM, DNS owner</td><td>1 h + up to a day</td><td>The domain shows “Verified”.</td></tr>
-  <tr><td>2.8</td><td><span class="cb"></span>In Railway set <span class="mono">RESEND_API_KEY</span> and <span class="mono">ALERT_EMAIL_FROM</span> and redeploy. In the platform open <i>Settings &amp; audit → Alert emails</i>, enter the recipients, press <i>Save recipients</i> and then <i>Send test email</i> (Figure 2).</td><td>PM</td><td>20 min</td><td>The test email arrives in <b>every</b> recipient’s inbox. Check spam too.</td></tr>
-  <tr><td>2.9</td><td><span class="cb"></span><i>Users &amp; roles → Create user.</i> Administrators: Eridon and the PM. <b>Operator</b>: the farmer (can acknowledge alerts, cannot change settings).</td><td>PM</td><td>15 min</td><td>Each person has signed in once.</td></tr>
-  <tr><td>2.10</td><td><span class="cb"></span><b>Rehearse the whole chain with no hardware.</b> <i>Sites &amp; sources:</i> add the site “Pilot farm” (sector Agriculture) and a <b>Device</b> source called “Rehearsal”; copy its key. Run the emulator (Appendix 5). Then set <b>Lower limit 28</b> on <i>Soil moisture 1</i> and <i>2</i> (Figure 3) and run it again with <span class="mono">--dry</span>.</td><td>PM, TL</td><td>1 h</td><td>An alert shows on the dashboard. <b>One</b> email arrives for both sensors. A normal reading closes the alert.</td></tr>
+  <tr><td>2.8</td><td><span class="cb"></span>In Railway set <span class="mono">RESEND_API_KEY</span> and <span class="mono">ALERT_EMAIL_FROM</span> and redeploy. In the platform open <i>Settings &amp; audit → Alert emails</i>, enter the recipients, press <i>Save recipients</i> and then <i>Send test email</i> (Figure 4).</td><td>PM</td><td>20 min</td><td>The test email arrives in <b>every</b> recipient’s inbox. Check spam too.</td></tr>
+  <tr><td>2.9</td><td><span class="cb"></span><b>Create accounts by invitation.</b> <i>Users &amp; roles → Invite someone</i>: enter the person’s email, choose <b>Authorized user</b> for the farmer (<b>Operator</b> only for a technician), press <i>Create invitation link</i>, and send the link (Figure 3). It is shown once, and emailed too when email is set up. They open it and choose their <b>own password</b>. Add the administrators (Eridon and the PM) under <i>Add user with a password</i>.</td><td>PM</td><td>15 min</td><td>Each person has signed in once. The invitation shows “accepted”.</td></tr>
+  <tr><td>2.10</td><td><span class="cb"></span><b>Rehearse the whole chain with no hardware.</b> <i>Sites &amp; sources:</i> add the site “Pilot farm” (sector Agriculture) and a <b>Device</b> source called “Rehearsal”; copy its key. Run the emulator (Appendix 5). Then set <b>Lower limit 28</b> on <i>Soil moisture 1</i> and <i>2</i> (Figure 5) and run it again with <span class="mono">--dry</span>.</td><td>PM, TL</td><td>1 h</td><td>An alert shows on the dashboard. <b>One</b> email arrives for both sensors. A normal reading closes the alert.</td></tr>
 </tbody></table>
 
 <figure>
+  <img src="img/setup-guide.png" alt="Setup guide page">
+  <figcaption>Figure 2. <i>Setup guide</i> on a brand-new platform: 2 of 12 steps done. The number beside it in the sidebar is the steps still open. Every step ticks itself when the platform sees it is done. (Example data.)</figcaption>
+</figure>
+<figure>
+  <img src="img/invite-link.png" alt="Invite someone panel">
+  <figcaption>Figure 3. <i>Users &amp; roles → Invite someone.</i> The link is a one-time secret, shown once. Only a hash of it is stored, so a lost link is revoked and replaced. (Example link.)</figcaption>
+</figure>
+<div class="callout warn"><b class="t">Which role for whom</b>
+<table style="margin:4pt 0 0">
+  <tr><td style="width:100pt"><b>Administrator</b></td><td>Eridon and the PM. Everything, including users and settings.</td></tr>
+  <tr><td><b>Operator</b></td><td>A technician only. Can also change limits, create sources, <b>replace a station’s key and deactivate it</b>. Either of those last two silently stops the station and counts against “4 weeks without intervention”.</td></tr>
+  <tr><td><b>Authorized user</b></td><td><b>The farmer.</b> Sees everything, can change nothing. The farmer does not need to acknowledge alerts: they close by themselves when the soil is moist again.</td></tr>
+</table></div>
+<figure>
   <img src="img/settings-email.png" alt="Alert emails panel">
-  <figcaption>Figure 2. <i>Settings &amp; audit → Alert emails.</i> The service line must show the sender address. Save the recipients, then send a test email. (Example data.)</figcaption>
+  <figcaption>Figure 4. <i>Settings &amp; audit → Alert emails.</i> The service line must show the sender address. Save the recipients, then send a test email. (Example data.)</figcaption>
 </figure>
 <figure>
   <img src="img/sources.png" alt="Sites and sources page">
-  <figcaption>Figure 3. <i>Sites &amp; sources.</i> A metric appears after the first upload. Click <i>Edit</i> on it to set the lower limit. (Example data.)</figcaption>
+  <figcaption>Figure 5. <i>Sites &amp; sources.</i> A metric appears after the first upload. Click <i>Edit</i> on it to set the lower limit. (Example data.)</figcaption>
 </figure>
 
 <div class="phase"><div class="n">3</div><div class="b"><h3>Build the stations and bench test</h3><div class="when">When the parts arrive (target 23 Oct, latest 28 Oct) – Mon 2 Nov</div><div class="goal">Each station works on a table for 72 hours before it goes near a field. This is the first time the firmware runs on a real board.</div></div></div>
@@ -307,12 +321,12 @@ and 3 x DFR0198, and send a pro-forma invoice in the company's name.</pre>
   <tr><td>4.2</td><td><span class="cb"></span><b>Place the sensors in the root zone:</b> one at 10–20 cm, one at 20–40 cm (or in two spots). Push each in up to the <b>white line</b> with firm contact and no air gaps. Keep the electronics above the soil. Loop each cable downward so water cannot run into the box.</td><td>TL</td><td>30 min</td><td>Sensors stand firm and straight.</td></tr>
   <tr><td>4.3</td><td><span class="cb"></span>Wait 15 minutes. On the platform, <i>Sites &amp; sources</i> must say “last data just now”. Check the <b>Wi-Fi signal</b> metric: it must be above <b>−80 dBm</b>. If not, move the router or station, or add an extender, before you leave.</td><td>TL, PM</td><td>20 min</td><td>Readings arrive. Signal is above −80 dBm.</td></tr>
   <tr><td>4.4</td><td><span class="cb"></span><b>Agree the lower limit with the farmer.</b> Start at 25–30% (we suggest 28%) and enter it on both moisture metrics. Ask: “When do you irrigate today, and how do you decide?” Write the answer in the log.</td><td>PM, farmer</td><td>20 min</td><td>Limits saved. The farmer’s current practice is recorded.</td></tr>
-  <tr><td>4.5</td><td><span class="cb"></span>Show the farmer the dashboard, the alert email (Figure 4) and the <i>Acknowledge</i> button. Hand over the <b>farmer card</b> (Appendix 4) with the PM’s phone number. Confirm the test email arrived on the phone the farmer actually uses.</td><td>PM</td><td>30 min</td><td>The farmer has received a test email on their phone.</td></tr>
+  <tr><td>4.5</td><td><span class="cb"></span>Check that the farmer created their account from the invitation (it shows “accepted”). Show them the dashboard and the alert email (Figure 6). Hand over the <b>farmer card</b> (Appendix 4) with the PM’s phone number. Confirm the test email arrived on the phone the farmer actually uses.</td><td>PM</td><td>30 min</td><td>The farmer can sign in, and has received a test email on their phone.</td></tr>
   <tr><td>4.6</td><td><span class="cb"></span>Take photos of the station, the sensor placement and the plot. Write <b>“Pilot start”</b> and the date in the weekly log. This starts the 4-week clock.</td><td>PM</td><td>15 min</td><td>Log entry made. Photos filed.</td></tr>
 </tbody></table>
 <figure>
   <img src="img/email-alert.png" alt="Alert email" style="width:78%">
-  <figcaption>Figure 4. The email the farmer receives when two sensors cross their limit together. One message, English and Albanian, with a link to the alerts. (Example data.)</figcaption>
+  <figcaption>Figure 6. The email the farmer receives when two sensors cross their limit together. One message, English and Albanian, with a link to the alerts. (Example data.)</figcaption>
 </figure>
 
 <div class="phase"><div class="n">5</div><div class="b"><h3>Run the pilot</h3><div class="when">Four weeks from the install day (6 Nov → 4 Dec)</div><div class="goal">Collect clean evidence. Keep the routine small and regular; do not tinker.</div></div></div>
@@ -340,7 +354,7 @@ and 3 x DFR0198, and send a pro-forma invoice in the company's name.</pre>
   <tr><td><span class="cb"></span><b>Station online</b></td><td><i>Sites &amp; sources</i>, “last data”</td><td>Less than 30 minutes ago</td></tr>
   <tr><td><span class="cb"></span><b>Data availability</b></td><td><i>Monitoring → 7 days</i>, “readings in period” on each moisture metric</td><td>At least <b>958 of 1,008</b> (95%)</td></tr>
   <tr><td><span class="cb"></span><b>Signal</b></td><td><i>Dashboard</i>, metric “Wi-Fi signal”</td><td>Above −80 dBm</td></tr>
-  <tr><td><span class="cb"></span><b>Curves look real</b></td><td><i>Monitoring</i> charts (Figure 5)</td><td>A smooth fall as the soil dries, a jump after irrigation. Not flat, not stuck at 0% or 100%, no spikes.</td></tr>
+  <tr><td><span class="cb"></span><b>Curves look real</b></td><td><i>Monitoring</i> charts (Figure 7)</td><td>A smooth fall as the soil dries, a jump after irrigation. Not flat, not stuck at 0% or 100%, no spikes.</td></tr>
   <tr><td><span class="cb"></span><b>Alerts match reality</b></td><td><i>Alerts → All</i>, then the farmer</td><td>Every dry period has an alert. Every alert has a real cause.</td></tr>
   <tr><td><span class="cb"></span><b>Email reaches the farmer</b></td><td>Ask the farmer</td><td>“Yes, I got it”</td></tr>
   <tr><td><span class="cb"></span><b>Hosting</b></td><td>Railway → <i>Usage</i>; <span class="mono">/api/health</span></td><td>Within budget. Status ok.</td></tr>
@@ -348,7 +362,7 @@ and 3 x DFR0198, and send a pro-forma invoice in the company's name.</pre>
 </tbody></table>
 <figure>
   <img src="img/monitoring.png" alt="Monitoring chart">
-  <figcaption>Figure 5. What a healthy sensor looks like on <i>Monitoring → 7 days</i>: a slow fall, a limit line at 28%, an irrigation jump, and a new warning as the soil dries again. <b>Illustrative data, not a real farm.</b></figcaption>
+  <figcaption>Figure 7. What a healthy sensor looks like on <i>Monitoring → 7 days</i>: a slow fall, a limit line at 28%, an irrigation jump, and a new warning as the soil dries again. <b>Illustrative data, not a real farm.</b></figcaption>
 </figure>
 
 <h3>C.2 Weekly log (copy this table)</h3>
@@ -420,7 +434,7 @@ and 3 x DFR0198, and send a pro-forma invoice in the company's name.</pre>
   <tr><td>Platform administrators</td><td>Settings, users, sources</td><td>Eridon, PM</td><td>Each person’s own password</td></tr>
   <tr><td>Station keys</td><td>Each station’s uploads</td><td>PM, TL</td><td>One key per station. Shown <b>only once</b> when created.</td></tr>
   <tr><td>4G router and SIM</td><td>Connectivity at the plot</td><td>PM</td><td>Router admin password, SIM PIN and PUK</td></tr>
-  <tr><td>Operator account</td><td>The farmer’s sign-in</td><td>Farmer</td><td>The farmer sets their own password</td></tr>
+  <tr><td>Farmer’s account (Authorized user)</td><td>The farmer’s sign-in, read-only</td><td>Farmer</td><td>Nothing: the farmer chose their own password from the invitation link</td></tr>
 </tbody></table>
 <div class="callout stop"><b class="t">Rules</b><ul class="small" style="margin-bottom:0"><li>One person, one account. No shared passwords.</li><li>Keys and passwords never go into chat, email, documents or GitHub.</li><li>Turn on two-factor sign-in on Railway, GitHub and Resend.</li><li>If a key might have leaked, replace it at once (<i>Sites &amp; sources → New API key</i>).</li></ul></div>
 
@@ -464,7 +478,6 @@ and 3 x DFR0198, and send a pro-forma invoice in the company's name.</pre>
     <li><span class="al">Hap emailin nga Greecon dhe shiko cili sensor tregon tokë të thatë.</span><span class="en">Open the Greecon email and see which sensor shows dry soil.</span></li>
     <li><span class="al">Kontrollo tokën me dorë në parcelë.</span><span class="en">Check the soil by hand in the plot.</span></li>
     <li><span class="al">Nëse toka është e thatë, ujit parcelën.</span><span class="en">If the soil is dry, irrigate the plot.</span></li>
-    <li><span class="al">Hap platformën dhe shtyp “Acknowledge” te alarmi.</span><span class="en">Open the platform and press “Acknowledge” on the alert.</span></li>
     <li><span class="al">Alarmi mbyllet vetë kur toka bëhet përsëri e lagësht.</span><span class="en">The alert closes by itself when the soil is moist again.</span></li>
   </ol>
   <div class="callout warn" style="margin-top:8pt"><b class="t">Stacioni pa lidhje · Station offline</b>

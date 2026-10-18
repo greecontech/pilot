@@ -20,7 +20,7 @@ Show that Greecon Platform can reliably measure soil moisture at a real farm or 
 **In scope**
 - 1 site and 1–2 stations, each with 2 soil moisture sensors and a soil temperature sensor.
 - The Dashboard, Monitoring, Alerts and Reports modules.
-- 1–2 operator accounts for the farmer or technician.
+- 1–2 accounts: an Authorized user (read-only) for the farmer, and an Operator for a technician if needed. Both are created by invitation.
 
 **Out of scope**
 - Energy and water modules.
@@ -63,6 +63,7 @@ Show that Greecon Platform can reliably measure soil moisture at a real farm or 
 
 1. **Email alerts**: done. New alerts and "station offline" are emailed in English and Albanian. See the README, section *Email alerts*.
 2. **Albanian interface** for farm users: not done. The dashboard is English only for the pilot; the emails are bilingual, and the farmer's contact point is the email, not the dashboard.
-3. **Per-site access** for partner accounts: not done. It is not needed while the pilot has a single farm. Revisit it before a second partner joins.
+3. **Accounts by invitation and an in-app setup guide**: done. See the README sections *Setup guide* and *Accounts and invitations*.
+4. **Per-site access** for partner accounts: not done. It is not needed while the pilot has a single farm. Revisit it before a second partner joins.
 
 The step-by-step setup for the project manager, with where to buy each part, is in [`pilot-setup-guide.pdf`](pilot-setup-guide.pdf). The hands-on build tutorial for the technician, from an empty desk to a working station, is in [`station-build-tutorial.pdf`](station-build-tutorial.pdf).

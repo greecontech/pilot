@@ -5,6 +5,7 @@ import { one, query } from "@/lib/db";
 import { SECTOR_LABELS, fmtDateTime, fmtNumber, fmtRelative } from "@/lib/format";
 import { completedMonths, currentProjectMonth, monthLabel, PROJECT_MONTHS } from "@/lib/project";
 import { listMetrics, metricStatus, series } from "@/lib/queries";
+import { loadSetup } from "@/lib/setup";
 import { requireUser } from "@/lib/session";
 
 export const metadata = { title: "Dashboard" };
@@ -12,6 +13,7 @@ export const metadata = { title: "Dashboard" };
 export default async function Dashboard({ searchParams }: { searchParams: Promise<{ denied?: string }> }) {
   const user = await requireUser();
   const { denied } = await searchParams;
+  const setup = user.role === "admin" ? await loadSetup() : null;
 
   const now = new Date();
   const dayAgo = new Date(now.getTime() - 24 * 3_600_000);
@@ -45,6 +47,13 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     <div className="stack">
       <PageHead title={`Good day, ${user.name.split(" ")[0]}`} intro={`Overview of all sites and data sources · ${fmtDateTime(now)}`} />
       {denied && <Notice tone="error">Your role does not have access to that page.</Notice>}
+
+      {setup && setup.progress.next && (
+        <Panel title="Finish the pilot setup" meta={`${setup.progress.done} of ${setup.progress.total} steps done`}
+          actions={<Link className="button small" href="/setup">Open the setup guide</Link>}>
+          <p>Next: <b>{setup.progress.next.title}</b>. <span className="muted">{setup.progress.next.summary}</span></p>
+        </Panel>
+      )}
 
       <div className="kpis">
         <Kpi label="Sites" value={counts?.sites ?? 0} sub={`${metrics.length} monitored metrics`} />

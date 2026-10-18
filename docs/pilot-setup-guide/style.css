@@ -8,7 +8,7 @@
   --muted: #5d675f; --line: #d9d1c4; --warn: #8a6a2d; --warn-bg: #f6eddb; --crit: #8f3d36; --crit-bg: #f5e4e1; --ok: #386f54;
 }
 @page { size: A4; margin: 17mm 17mm 19mm 17mm;
-  @bottom-left { content: "Greecon Platform · Soil moisture pilot · Setup guide v1.1"; font: 400 7.5pt "IBM Plex Serif", serif; color: #5d675f; }
+  @bottom-left { content: "Greecon Platform · Soil moisture pilot · Setup guide v1.2"; font: 400 7.5pt "IBM Plex Serif", serif; color: #5d675f; }
   @bottom-right { content: counter(page); font: 400 8pt "IBM Plex Serif", serif; color: #5d675f; } }
 @page :first { margin: 0; @bottom-left { content: none; } @bottom-right { content: none; } }
 

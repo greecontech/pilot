@@ -6,7 +6,7 @@ This maps each requirement in *D2 – Specifikimi i kërkesave funksionale dhe t
 
 | § | Requirement | Implementation |
 |---|---|---|
-| 5.1 | Create and administer users; roles and access levels; activate and deactivate users; control access by role | `/admin/users`. The roles are `admin`, `operator` and `viewer`. Access is checked on the server for every page and action (`requireUser(role)`). A deactivated user loses access immediately, and at least one active administrator must always remain. |
+| 5.1 | Create and administer users; roles and access levels; activate and deactivate users; control access by role | `/admin/users`, with accounts created by password or by one-time invitation link (`/join/<token>`). The roles are `admin`, `operator` and `viewer`. Access is checked on the server for every page and action (`requireUser(role)`). A deactivated user loses access immediately, and at least one active administrator must always remain. |
 | 5.2 | Centralized dashboard: structured information, quick access, indicators, navigation, items that need attention | `/`: key figures, "Needs attention" (active alerts, critical first), and per-site metric tiles showing status and a 24-hour trend. |
 | 5.3 | Receive and record data; organize and store it; view current and historical data; filter and search | `/data` (filters, pagination, manual entry, CSV import and export), `/api/ingest`, and PostgreSQL storage indexed by metric and time. |
 | 5.4 | Gradual integration of sources, devices and external systems | Sites, then data sources (device, API, manual, simulated), then metrics. Each source has its own API key; only the SHA-256 hash of the key is stored. Metrics are created automatically on first ingestion. |

@@ -5,7 +5,7 @@
 <title>Build the soil moisture station from zero: hands-on tutorial</title>
 <link rel="stylesheet" href="../pilot-setup-guide/style.css">
 <style>
-@page { @bottom-left { content: "Greecon Platform · Station build tutorial v1.0"; font: 400 7.5pt "IBM Plex Serif", serif; color: #5d675f; } }
+@page { @bottom-left { content: "Greecon Platform · Station build tutorial v1.1"; font: 400 7.5pt "IBM Plex Serif", serif; color: #5d675f; } }
 .check { background: #eaf2ed; border-left: 3pt solid var(--ok); padding: 6pt 10pt; margin: 6pt 0 9pt; border-radius: 0 4pt 4pt 0; break-inside: avoid; }
 .check b.t { display: block; font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ok); margin-bottom: 2pt; }
 .check p:last-child, .check ul:last-child { margin-bottom: 0; }
@@ -42,7 +42,7 @@ h2 { margin-top: 18pt; }
     <tr><td>Companion to</td><td><i>Soil moisture pilot: setup guide for the project manager</i> (what to do and when). This tutorial is the <i>how</i>.</td></tr>
     <tr><td>Firmware</td><td><span class="mono">devices/esp32-soil-moisture</span> in <span class="mono">greecontech/pilot</span>, compiled with <span class="mono">esp32</span> core 3.3.12</td></tr>
     <tr><td>What is proven</td><td>The platform side was run end to end and the firmware compiles. <b>The firmware has not yet run on a real board: you are the first.</b> Write down everything unexpected.</td></tr>
-    <tr><td>Version</td><td>1.0 · 13 October 2026</td></tr>
+    <tr><td>Version</td><td>1.1 · 18 October 2026</td></tr>
   </table>
   <div class="foot">Output samples marked “example” show the format, not your numbers. Values such as 2,950 or 1,320 are illustrations.</div>
 </section>
@@ -147,6 +147,7 @@ APP_TIMEZONE=Europe/Tirane</pre>
   <li>Open the service’s <i>Settings → Networking → Generate Domain</i>. Wait for the deployment to turn green (a minute or two).</li>
   <li>Open <span class="mono">https://&lt;your-domain&gt;/api/health</span> in a browser.</li>
   <li>Open the domain itself, sign in with <span class="mono">ADMIN_EMAIL</span> and <span class="mono">ADMIN_PASSWORD</span>, go to <i>Account</i> and <b>change the password</b>.</li>
+  <li>Open <b>Setup guide</b> in the sidebar. It lists the remaining pilot steps and ticks each one itself when the platform sees it is done. A fresh platform shows <b>2 of 12</b> done.</li>
 </ol>
 <div class="check"><b class="t">Check</b><p class="small">The health page shows <span class="mono">{"status":"ok","database":"ok","time":"…"}</span> and you can sign in. If it shows <span class="mono">"status":"degraded"</span>, the app cannot reach PostgreSQL: check that <span class="mono">DATABASE_URL</span> is exactly as above and that the database service is running.</p></div>
 
@@ -331,7 +332,7 @@ APP_TIMEZONE=Europe/Tirane</pre>
   <li><b>Switch on</b> (plug in or connect the panel). Wait 15 minutes.</li>
   <li>On the platform check: <i>Sites &amp; sources</i> shows “last data just now”; <span class="mono">wifi_rssi</span> is above <b>−80 dBm</b>; both moisture sensors show plausible percentages for soil that is damp or dry. If the signal is weak, move the router or add an extender <b>now</b>.</li>
   <li><b>Agree the lower limit with the farmer</b> (start at 25–30%, we suggest 28%), enter it on both moisture metrics, and ask when they irrigate today.</li>
-  <li>Show the farmer the alert email and the <i>Acknowledge</i> button, give them the farmer card, and make sure a test email reached <b>their own phone</b>.</li>
+  <li>Check that the farmer created their account from the invitation (<i>Users &amp; roles</i> shows “accepted”), show them the dashboard and the alert email, give them the farmer card, and make sure a test email reached <b>their own phone</b>. Invite the farmer as an <b>Authorized user</b>: read-only, so a slip cannot replace the station’s key or stop it.</li>
   <li><b>Photograph</b> the box, the sensor positions and the plot, and note the date: it starts the 4-week clock.</li>
 </ol>
 <div class="check"><b class="t">Check</b><p class="small">An hour after you leave, open the platform from the office: the station is online, there are about six readings per metric, and the curves are smooth.</p></div>

@@ -215,3 +215,19 @@ details.inline-edit[open] summary { margin-bottom: 10px; }
 }
 details.inline-edit { min-width: 0; max-width: 100%; }
 details.inline-edit .row, details.inline-edit form { max-width: 100%; }
+
+/* Setup guide */
+.progress { height: 8px; border-radius: 999px; background: var(--surface-strong); margin-top: 14px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--green); border-radius: 999px; }
+.checklist { list-style: none; margin: 0; padding: 0; }
+.checklist > li { display: flex; gap: 14px; padding: 16px 18px; border-top: 1px solid var(--line); }
+.checklist > li:first-child { border-top: 0; }
+.checklist .mark { flex: none; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--line-strong); display: grid; place-items: center; font-size: 14px; color: #fff; margin-top: 1px; }
+.checklist .done .mark { background: var(--ok); border-color: var(--ok); }
+.checklist .next .mark { border-color: var(--green); box-shadow: 0 0 0 3px rgba(68, 133, 97, 0.18); }
+.checklist .next { background: rgba(68, 133, 97, 0.06); }
+.checklist .done h3 { color: var(--muted); font-weight: 400; }
+.checklist .body { flex: 1; min-width: 0; display: grid; gap: 4px; }
+.checklist details { margin-top: 8px; }
+.checklist summary { cursor: pointer; font-size: 13px; color: var(--ink-2); }
+.checklist .how { margin: 8px 0 12px; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; }
