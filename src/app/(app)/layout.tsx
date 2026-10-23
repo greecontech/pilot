@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { Funders } from "@/components/Funders";
 import { Logo } from "@/components/Logo";
 import { Nav, type NavItem } from "@/components/Nav";
 import { one } from "@/lib/db";
 import { ROLE_LABELS, atLeast } from "@/lib/roles";
+import { loadSetup } from "@/lib/setup";
 import { requireUser } from "@/lib/session";
 import { logout } from "../login/actions";
 
@@ -22,7 +24,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     { href: "/project", label: "Project plan", group: "Project" }
   ];
   if (atLeast(user.role, "admin")) {
+    const { progress } = await loadSetup();
     items.push(
+      { href: "/setup", label: "Setup guide", count: progress.remaining, group: "Administration" },
       { href: "/admin/users", label: "Users & roles", group: "Administration" },
       { href: "/admin/settings", label: "Settings & audit", group: "Administration" }
     );
@@ -45,7 +49,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </form>
         </div>
       </aside>
-      <main className="main">{children}</main>
+      <main className="main">
+        <div className="content">{children}</div>
+        <Funders />
+      </main>
     </div>
   );
 }

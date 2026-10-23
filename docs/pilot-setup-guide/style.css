@@ -1,0 +1,114 @@
+@font-face { font-family: "IBM Plex Serif"; font-weight: 400; src: url("fonts/ibm-plex-serif-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Serif"; font-weight: 400; font-style: italic; src: url("fonts/ibm-plex-serif-latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Serif"; font-weight: 500; src: url("fonts/ibm-plex-serif-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Serif"; font-weight: 600; src: url("fonts/ibm-plex-serif-latin-600-normal.woff2") format("woff2"); }
+
+:root {
+  --bg: #f7f1e9; --surface: #efe8dd; --ink: #1a211d; --ink2: #2f3d35; --pale: #d8e2dc; --green: #448561;
+  --muted: #5d675f; --line: #d9d1c4; --warn: #8a6a2d; --warn-bg: #f6eddb; --crit: #8f3d36; --crit-bg: #f5e4e1; --ok: #386f54;
+}
+@page { size: A4; margin: 17mm 17mm 19mm 17mm;
+  @bottom-left { content: "Greecon Platform · Soil moisture pilot · Setup guide v1.2"; font: 400 7.5pt "IBM Plex Serif", serif; color: #5d675f; }
+  @bottom-right { content: counter(page); font: 400 8pt "IBM Plex Serif", serif; color: #5d675f; } }
+@page :first { margin: 0; @bottom-left { content: none; } @bottom-right { content: none; } }
+
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; font-family: "IBM Plex Serif", Georgia, serif; font-size: 9.4pt; line-height: 1.45; color: var(--ink); }
+h1, h2, h3, h4 { font-weight: 500; margin: 0; letter-spacing: -0.005em; break-after: avoid; }
+h1 { font-size: 20pt; line-height: 1.15; }
+h2 { font-size: 13pt; margin: 16pt 0 6pt; }
+h3 { font-size: 10.5pt; margin: 11pt 0 4pt; }
+p { margin: 0 0 6pt; }
+ul, ol { margin: 0 0 6pt; padding-left: 15pt; }
+li { margin-bottom: 2pt; }
+a { color: var(--ok); text-decoration: none; }
+code, .mono { font-family: "DejaVu Sans Mono", Menlo, monospace; font-size: 8pt; background: #efe8dd; padding: 0.5pt 3pt; border-radius: 2pt; overflow-wrap: anywhere; }
+pre { font-family: "DejaVu Sans Mono", Menlo, monospace; font-size: 7.6pt; line-height: 1.4; background: var(--surface); border: 1px solid var(--line); border-radius: 4pt; padding: 7pt 9pt; margin: 4pt 0 8pt; white-space: pre-wrap; overflow-wrap: anywhere; break-inside: avoid; }
+.muted { color: var(--muted); }
+.small { font-size: 8pt; }
+.kicker { font-size: 7.6pt; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); font-weight: 600; }
+.pb { break-before: page; }
+.avoid { break-inside: avoid; }
+
+/* cover */
+.cover { height: 297mm; width: 210mm; background: var(--bg); padding: 26mm 22mm 20mm; display: flex; flex-direction: column; position: relative; break-after: page; }
+.cover .brand { display: flex; align-items: center; gap: 10pt; }
+.cover .brand img { height: 30pt; }
+.cover .brand span { font-size: 13pt; letter-spacing: 0.16em; font-weight: 500; }
+.cover .brand small { display: block; font-size: 7.5pt; letter-spacing: 0.2em; color: var(--muted); font-weight: 400; }
+.cover h1 { font-size: 36pt; line-height: 1.08; margin: 46mm 0 8pt; }
+.cover .sub { font-size: 15pt; color: var(--ink2); margin-bottom: 16pt; }
+.cover .lede { font-size: 10.6pt; max-width: 128mm; color: var(--ink2); line-height: 1.55; }
+.cover .rule { height: 3pt; width: 34mm; background: var(--green); margin: 14pt 0; }
+.cover table { margin-top: auto; border-collapse: collapse; font-size: 8.8pt; width: 100%; }
+.cover td { padding: 5pt 0; border-top: 1px solid var(--line); vertical-align: top; }
+.cover td:first-child { width: 36mm; color: var(--muted); }
+.cover .foot { font-size: 7.6pt; color: var(--muted); margin-top: 10pt; }
+
+/* contents */
+.toc { list-style: none; padding: 0; margin: 8pt 0 0; }
+.toc li { display: flex; align-items: baseline; gap: 6pt; padding: 4pt 0; border-bottom: 1px dotted var(--line); margin: 0; }
+.toc .n { width: 16pt; color: var(--green); font-weight: 600; }
+.toc .t { flex: 0 1 auto; font-weight: 500; }
+.toc .d { color: var(--muted); font-size: 8.2pt; flex: 1; }
+.toc .p { color: var(--muted); }
+
+/* blocks */
+.callout { background: var(--bg); border-left: 3pt solid var(--green); padding: 7pt 10pt; margin: 6pt 0 9pt; border-radius: 0 4pt 4pt 0; break-inside: avoid; }
+.callout.warn { background: var(--warn-bg); border-color: var(--warn); }
+.callout.stop { background: var(--crit-bg); border-color: var(--crit); }
+.callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+.callout b.t { display: block; font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2pt; color: var(--green); }
+.callout.warn b.t { color: var(--warn); } .callout.stop b.t { color: var(--crit); }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; }
+.cols > div { break-inside: avoid; }
+figure { margin: 6pt 0 9pt; break-inside: avoid; }
+figure img { width: 100%; border: 1px solid var(--line); border-radius: 4pt; display: block; }
+figcaption { font-size: 7.8pt; color: var(--muted); margin-top: 3pt; }
+
+table { border-collapse: collapse; width: 100%; margin: 4pt 0 9pt; font-size: 8.6pt; }
+th { text-align: left; font-weight: 600; font-size: 7.6pt; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink2); background: var(--surface); padding: 4pt 6pt; border-bottom: 1.2pt solid var(--ink2); }
+td { padding: 4.5pt 6pt; border-bottom: 1px solid var(--line); vertical-align: top; }
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+td.r, th.r { text-align: right; white-space: nowrap; }
+td.nw { white-space: nowrap; }
+tr.sub td { background: var(--bg); font-weight: 600; }
+table.steps td:first-child { width: 22pt; font-weight: 600; color: var(--green); white-space: nowrap; }
+table.steps td:nth-child(3) { width: 48pt; font-size: 8pt; color: var(--ink2); }
+table.steps td:nth-child(4) { width: 44pt; font-size: 8pt; color: var(--ink2); }
+table.steps td:nth-child(5) { width: 112pt; font-size: 8.2pt; background: #f5f8f6; }
+table.steps th:first-child { width: 22pt; }
+.cb { display: inline-block; width: 7.5pt; height: 7.5pt; border: 1.1pt solid var(--ink2); border-radius: 1.5pt; vertical-align: -1pt; margin-right: 4pt; }
+.tag { display: inline-block; font-size: 7pt; padding: 0.5pt 5pt; border-radius: 8pt; background: var(--pale); color: var(--ink2); letter-spacing: 0.03em; white-space: nowrap; }
+.tag.opt { background: var(--warn-bg); color: var(--warn); }
+.tag.req { background: var(--green); color: #fff; }
+
+/* phase header */
+.phase { display: flex; align-items: stretch; margin: 15pt 0 5pt; break-after: avoid; break-inside: avoid; }
+.phase .n { background: var(--green); color: #fff; font-size: 17pt; font-weight: 500; width: 33pt; display: flex; align-items: center; justify-content: center; border-radius: 4pt 0 0 4pt; }
+.phase .b { background: var(--bg); flex: 1; padding: 6pt 10pt; border-radius: 0 4pt 4pt 0; }
+.phase h3 { margin: 0; font-size: 11.5pt; }
+.phase .when { font-size: 8.2pt; color: var(--muted); }
+.phase .goal { font-size: 8.6pt; margin-top: 2pt; }
+
+/* gantt */
+table.gantt { table-layout: fixed; font-size: 7.8pt; }
+table.gantt th { text-align: center; padding: 3pt 1pt; font-size: 6.8pt; letter-spacing: 0; text-transform: none; }
+table.gantt th:first-child, table.gantt td:first-child { width: 112pt; text-align: left; padding-left: 4pt; }
+table.gantt td { padding: 0; height: 17pt; border-bottom: 1px solid #ece5d8; border-left: 1px solid #f0eadf; }
+table.gantt td.b { background: var(--green); }
+table.gantt td.l { background: repeating-linear-gradient(45deg, #cfd9d2, #cfd9d2 2.5pt, #e6ece8 2.5pt, #e6ece8 5pt); }
+table.gantt td.k { background: var(--warn); }
+table.gantt td.f { background: var(--crit); }
+table.gantt td:first-child { border-left: none; padding-right: 4pt; font-size: 8pt; }
+table.log td { height: 25pt; }
+.legend { font-size: 7.6pt; color: var(--muted); display: flex; gap: 12pt; margin-top: -4pt; margin-bottom: 8pt; }
+.legend i { display: inline-block; width: 14pt; height: 6pt; vertical-align: 0; margin-right: 3pt; }
+
+.farmer { border: 1.5pt solid var(--green); border-radius: 8pt; padding: 12pt 16pt; break-inside: avoid; }
+.farmer h2 { margin-top: 0; }
+.farmer ol { padding-left: 16pt; } .farmer li { margin-bottom: 7pt; font-size: 10pt; }
+.farmer .al { font-weight: 600; } .farmer .en { color: var(--muted); font-size: 8.6pt; display: block; font-weight: 400; }
+.sig { border-bottom: 1px solid var(--ink2); display: inline-block; width: 90pt; height: 10pt; }

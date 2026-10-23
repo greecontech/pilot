@@ -8,14 +8,15 @@ This repository is the working base of the platform described in the project's t
 
 | Module | D2 | Summary |
 |---|---|---|
-| Sign-in and roles | §5.1, §9.1 | Email and password sign-in. Three roles: **Administrator**, **Operator** and **Authorized user** (read-only). Access is enforced on the server. |
+| Sign-in and roles | §5.1, §9.1 | Email and password sign-in. Three roles: **Administrator**, **Operator** and **Authorized user** (read-only). Access is enforced on the server. People join by **invitation** (see [Accounts and invitations](#accounts-and-invitations)). |
 | Dashboard | §5.2 | Key figures, alerts that need attention, and each site's metrics with 24-hour trends. |
 | Data | §5.3 | Every reading, filterable by site, metric, origin and period. Supports manual entry, CSV import and CSV export. |
 | Sites and sources | §5.4 | Sites, data sources (device, API, manual), and metrics with lower and upper limits. Sources get API keys for ingestion. |
 | Monitoring | §5.5, §9.4–9.5 | A chart for each metric with its limits, a period selector (24 h to 90 days, or custom), and comparison with the previous period. |
 | Alerts | §5.6, §9.6 | An alert is raised when a reading crosses a limit: warning or critical. Alerts can be acknowledged or resolved, and they close automatically once values return to range. New alerts, and stations that stop sending, are also emailed (see [Email alerts](#email-alerts)). |
 | Reports | §5.7, §9.7 | A summary per metric for a chosen period: min, max, average, change against the previous period, share of readings outside limits, and alerts. Can be exported to CSV or printed. |
-| Administration | §5.8 | Users and roles, organization settings, system status and a full audit log. |
+| Administration | §5.8 | Users and roles, invitations, organization settings, system status and a full audit log. |
+| Setup guide | – | A checklist of the pilot setup steps that ticks itself from the platform's own state (see [Setup guide](#setup-guide)). |
 | Project plan | Aneksi 1 | Startup Albania activity plan (Gantt chart), the current month, and the status of deliverables D1–D7. |
 
 ## Stack
@@ -63,6 +64,36 @@ Email is sent through [Resend](https://resend.com)'s HTTPS API, because Railway 
 3. Under **Settings & audit → Alert emails**, enter the recipients and press **Send test email**. (`ALERT_EMAIL_TO` provides the initial recipients.)
 
 Without `RESEND_API_KEY` nothing is sent, and the platform works as before. A failed send never delays or fails a device upload: the alert is released and retried by a sweep that runs every `NOTIFY_SWEEP_SECONDS` (default 300). Alerts older than 24 hours and alerts on simulated sources are never emailed.
+
+## Setup guide
+
+Administrators see a **Setup guide** in the sidebar, with the number of steps still open. It lists the 12 steps of the pilot setup in four groups (platform, email alerts, the pilot station, people), explains each one, and links to the page where it is done. A step ticks itself when the platform can see it is done, for example the first reading arrived or a lower limit was set, so the page is always the true state, never a list somebody has to keep up to date. While steps remain, the dashboard shows the next one.
+
+## Accounts and invitations
+
+There is no open sign-up: anyone who found the address could otherwise read farm data. People join by invitation instead.
+
+1. An administrator opens **Users & roles → Invite someone**, optionally enters the person's email, chooses a role and how long the link stays valid (3, 7 or 14 days), and presses **Create invitation link**.
+2. The link is shown **once** and is also emailed to the person when an email address was given and email alerts are set up. Only a SHA-256 hash of it is stored, so a lost link is revoked and replaced, never looked up.
+3. The person opens the link, enters their name, and chooses their own password (10 or more characters). Nobody else ever knows it. They are signed in at once.
+
+What keeps this safe:
+
+- Invitations create **Authorized users** (read-only) or **Operators**. Administrators are only added by an administrator under **Add user with a password**.
+- A link works **once**. Two people opening it at the same moment create one account: the invitation is claimed atomically in the same database transaction that creates the user.
+- A link can be **revoked** at any time, and expires on its own. An email address that already has an account is refused, and the link stays usable.
+- With an email address on the invitation, only that address is accepted, whatever the browser sends.
+- The link page sends no referrer, a link that is wrong, used, revoked or expired shows the same neutral message, and the token never appears in the audit log. Every step is audited.
+
+For a farmer, choose **Authorized user**. An **Operator** can also change limits, create sources, replace a station's key and deactivate it, and either of the last two silently stops the station.
+
+## Funding acknowledgement
+
+The project is funded through the Startup Albania Grant 2026, and the grant's visibility plan (Annex 1) asks for it to be shown. Every page carries the logos of the Ministry of Economy and Innovation and Startup Albania, with this text, at the bottom: the sign-in and invitation pages, and every signed-in page (bottom-left of the content area, which on a short page is the bottom-left corner of the screen).
+
+> The "Greecon" project is carried out with the financial support of the Albanian Government through the Ministry of Economy and Innovation, under the Grant 2026 scheme, and is implemented by the Innovation4Albania Agency.
+
+The component is `src/components/Funders.tsx` and the logos are in `public/funders/`. They are the supplied artwork, only cropped to its edges and reduced in size; do not recolour or stretch them. To change the wording or add a logo, edit that one component.
 
 ## Local development
 

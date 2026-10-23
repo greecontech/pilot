@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Logo, Mark } from "@/components/Logo";
+import { AuthShell } from "@/components/AuthShell";
 import { one } from "@/lib/db";
 import { getUser } from "@/lib/session";
 import { LoginForm } from "./LoginForm";
@@ -23,26 +23,10 @@ export default async function LoginPage() {
   const problem = await setupProblem();
   if (!problem && (await getUser().catch(() => null))) redirect("/");
   return (
-    <main className="auth">
-      <section className="auth-brand" aria-hidden="true">
-        <div className="auth-brand-mark"><Mark size={64} color="#f7f1e9" /></div>
-        <div>
-          <p className="auth-kicker">Greecon Platform</p>
-          <h1 className="auth-title">Nature and technology <em>in harmony.</em></h1>
-          <p className="auth-lead">One intelligent system for renewable energy, smart agriculture and water management — monitored, measured and optimised in real time.</p>
-        </div>
-        <ul className="auth-sectors">
-          <li>Energy</li><li>Agriculture</li><li>Water</li>
-        </ul>
-      </section>
-      <section className="auth-panel">
-        <div className="auth-card">
-          <Logo size={40} />
-          {problem && <div className="notice error" role="alert">{problem}</div>}
-          <LoginForm />
-          <p className="auth-foot">Greecon shpk · Durana Tech Park, Shijak · <a href="https://greecon.earth">greecon.earth</a></p>
-        </div>
-      </section>
-    </main>
+    <AuthShell>
+      {problem && <div className="notice error" role="alert">{problem}</div>}
+      <LoginForm />
+      <p className="small muted">Have an invitation? Open the link you were sent to create your account. No link yet? Ask your administrator.</p>
+    </AuthShell>
   );
 }

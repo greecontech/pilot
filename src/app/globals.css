@@ -74,7 +74,8 @@ label.inline { display: flex; align-items: center; gap: 8px; }
 .sidebar-foot .who { font-weight: 500; }
 .sidebar-foot .role { color: var(--muted); font-size: 12px; }
 .sidebar-foot form { margin-top: 10px; }
-.main { min-width: 0; padding: 28px 32px 64px; }
+.main { min-width: 0; padding: 28px 32px 22px; display: flex; flex-direction: column; }
+.main > .content { flex: 1 0 auto; min-width: 0; padding-bottom: 48px; }
 .page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
 .page-head > div:first-child { flex: 1 1 320px; min-width: 0; }
 .page-head p { color: var(--muted); margin-top: 4px; max-width: 70ch; }
@@ -185,8 +186,8 @@ details.inline-edit[open] summary { margin-bottom: 10px; }
 .auth-lead { margin-top: 18px; max-width: 46ch; color: rgba(247, 241, 233, 0.78); font-size: 16px; }
 .auth-sectors { display: flex; gap: 10px; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
 .auth-sectors li { padding: 6px 14px; border: 1px solid rgba(216, 226, 220, 0.35); border-radius: 999px; font-size: 13px; color: var(--pale); }
-.auth-panel { display: grid; place-items: center; padding: 40px 24px; background: var(--bg); }
-.auth-card { width: 100%; max-width: 380px; display: grid; gap: 22px; }
+.auth-panel { display: flex; flex-direction: column; align-items: center; padding: 40px 24px 22px; background: var(--bg); }
+.auth-card { width: 100%; max-width: 380px; display: grid; gap: 22px; margin: auto 0; }
 .auth-card .brand { padding: 0; }
 .auth-card form { display: grid; gap: 14px; padding: 24px; border: 1px solid var(--line); border-radius: 10px; background: #fbf8f3; }
 .auth-card button[type="submit"] { background: var(--green); border-color: var(--green); }
@@ -215,3 +216,34 @@ details.inline-edit[open] summary { margin-bottom: 10px; }
 }
 details.inline-edit { min-width: 0; max-width: 100%; }
 details.inline-edit .row, details.inline-edit form { max-width: 100%; }
+
+/* Setup guide */
+.progress { height: 8px; border-radius: 999px; background: var(--surface-strong); margin-top: 14px; overflow: hidden; }
+.progress > div { height: 100%; background: var(--green); border-radius: 999px; }
+.checklist { list-style: none; margin: 0; padding: 0; }
+.checklist > li { display: flex; gap: 14px; padding: 16px 18px; border-top: 1px solid var(--line); }
+.checklist > li:first-child { border-top: 0; }
+.checklist .mark { flex: none; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--line-strong); display: grid; place-items: center; font-size: 14px; color: #fff; margin-top: 1px; }
+.checklist .done .mark { background: var(--ok); border-color: var(--ok); }
+.checklist .next .mark { border-color: var(--green); box-shadow: 0 0 0 3px rgba(68, 133, 97, 0.18); }
+.checklist .next { background: rgba(68, 133, 97, 0.06); }
+.checklist .done h3 { color: var(--muted); font-weight: 400; }
+.checklist .body { flex: 1; min-width: 0; display: grid; gap: 4px; }
+.checklist details { margin-top: 8px; }
+.checklist summary { cursor: pointer; font-size: 13px; color: var(--ink-2); }
+.checklist .how { margin: 8px 0 12px; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; }
+
+/* Funding acknowledgement (Startup Albania grant visibility) */
+.funders { display: flex; align-items: center; gap: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
+.funders-logos { display: flex; align-items: center; gap: 22px; flex: none; }
+.funders img { display: block; height: auto; }
+.funders .ministry { width: 100px; }
+.funders .startup-albania { width: 168px; }
+.funders p { margin: 0; max-width: 66ch; font-size: 12.5px; line-height: 1.55; color: var(--muted); }
+.auth-panel .funders { width: 100%; max-width: 440px; margin-top: 28px; flex-direction: column; align-items: flex-start; gap: 16px; }
+.auth-panel .funders .ministry { width: 88px; }
+.auth-panel .funders .startup-albania { width: 148px; }
+@media (max-width: 560px) {
+  .funders { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .main { padding-bottom: 18px; }
+}

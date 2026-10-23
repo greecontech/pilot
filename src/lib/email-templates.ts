@@ -92,3 +92,13 @@ export function buildTestEmail(link: string | null): Email {
   const body = render("Test email / Email provë", [["Status", "Email alerts are working / Njoftimet me email funksionojnë"]], link, "Open platform / Hap platformën");
   return { subject: "[Greecon] Test email", ...body };
 }
+
+export function buildInviteEmail(input: { organization: string; role: string; inviter: string; days: number; link: string }): Email {
+  const rows: Row[] = [
+    ["Invited by / Ftuar nga", input.inviter],
+    ["Role / Roli", input.role],
+    ["Valid for / Vlen për", `${input.days} days / ditë`]
+  ];
+  const body = render("You are invited to Greecon Platform / Jeni ftuar në Greecon Platform", rows, input.link, "Create your account / Krijoni llogarinë tuaj");
+  return { subject: `[Greecon] Invitation to ${input.organization}`, ...body };
+}
