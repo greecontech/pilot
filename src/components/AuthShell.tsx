@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Funders } from "@/components/Funders";
 import { Logo, Mark } from "@/components/Logo";
 
 /** The two-column layout shared by the sign-in page and the invitation page. */
@@ -22,6 +23,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
           {children}
           <p className="auth-foot">Greecon shpk · Durana Tech Park, Shijak · <a href="https://greecon.earth">greecon.earth</a></p>
         </div>
+        <Funders />
       </section>
     </main>
   );

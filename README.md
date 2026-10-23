@@ -87,6 +87,14 @@ What keeps this safe:
 
 For a farmer, choose **Authorized user**. An **Operator** can also change limits, create sources, replace a station's key and deactivate it, and either of the last two silently stops the station.
 
+## Funding acknowledgement
+
+The project is funded through the Startup Albania Grant 2026, and the grant's visibility plan (Annex 1) asks for it to be shown. Every page carries the logos of the Ministry of Economy and Innovation and Startup Albania, with this text, at the bottom: the sign-in and invitation pages, and every signed-in page (bottom-left of the content area, which on a short page is the bottom-left corner of the screen).
+
+> The "Greecon" project is carried out with the financial support of the Albanian Government through the Ministry of Economy and Innovation, under the Grant 2026 scheme, and is implemented by the Innovation4Albania Agency.
+
+The component is `src/components/Funders.tsx` and the logos are in `public/funders/`. They are the supplied artwork, only cropped to its edges and reduced in size; do not recolour or stretch them. To change the wording or add a logo, edit that one component.
+
 ## Local development
 
 ```bash

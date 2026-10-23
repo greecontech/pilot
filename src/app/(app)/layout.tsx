@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Funders } from "@/components/Funders";
 import { Logo } from "@/components/Logo";
 import { Nav, type NavItem } from "@/components/Nav";
 import { one } from "@/lib/db";
@@ -48,7 +49,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </form>
         </div>
       </aside>
-      <main className="main">{children}</main>
+      <main className="main">
+        <div className="content">{children}</div>
+        <Funders />
+      </main>
     </div>
   );
 }
